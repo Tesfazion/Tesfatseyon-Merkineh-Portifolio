@@ -1,0 +1,49 @@
+{
+  "name": "Tesfatseyon Merkinh — Full-Stack Developer & Video Editor",
+  "short_name": "Tesfatseyon",
+  "description": "Modern websites that convert, and short-form video people watch to the end. Based in Wolaita-Sodo, Ethiopia.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0b",
+  "theme_color": "#0a0a0b",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Web Developer",
+      "short_name": "Web",
+      "url": "/web",
+      "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }]
+    },
+    {
+      "name": "Video Editor",
+      "short_name": "Video",
+      "url": "/video",
+      "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }]
+    }
+  ]
+}

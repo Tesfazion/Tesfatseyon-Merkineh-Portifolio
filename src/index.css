@@ -24,6 +24,9 @@
   --ink-3: #6e6d76;
   --ink-4: #3f3f46;
 
+  /* Focus — branded ring for keyboard users */
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
   /* Hairlines (structural rules) */
   --hairline:   rgba(245, 244, 242, 0.10);
   --hairline-2: rgba(245, 244, 242, 0.20);
@@ -41,8 +44,8 @@
      background-image when stacked with url(). */
   --section-scrim: linear-gradient(
     180deg,
-    rgba(10, 10, 11, 0.56) 0%,
-    rgba(10, 10, 11, 0.70) 100%
+    rgba(10, 10, 11, 0.42) 0%,
+    rgba(10, 10, 11, 0.56) 100%
   );
   --accent:      rgb(var(--accent-rgb));
   --accent-bg:   rgb(var(--accent-rgb) / 0.10);
@@ -150,6 +153,7 @@ textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--r-sm);
+  box-shadow: var(--focus-ring);
 }
 
 /* ============================================================
@@ -237,8 +241,8 @@ textarea:focus-visible {
   color: #0a0a0b;
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 28px var(--accent-glow);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 38px var(--accent-glow);
 }
 
 .btn-ghost {
@@ -1186,8 +1190,8 @@ textarea:focus-visible {
 }
 .project-card:hover {
   border-color: var(--accent-line);
-  transform: translateY(-6px) rotateX(calc(var(--tilt-rx, 0) * 1deg)) rotateY(calc(var(--tilt-ry, 0) * 1deg));
-  box-shadow: var(--shadow-lift);
+  transform: translateY(-8px) rotateX(calc(var(--tilt-rx, 0) * 1deg)) rotateY(calc(var(--tilt-ry, 0) * 1deg));
+  box-shadow: 0 24px 64px var(--shadow), 0 0 0 1px var(--accent-line);
 }
 
 .project-cover {
@@ -1433,6 +1437,22 @@ a.contact-channel:hover {
 }
 .form-field input::placeholder,
 .form-field textarea::placeholder { color: var(--ink-3); }
+
+.form-field--error input,
+.form-field--error textarea,
+.form-field--error select {
+  border-color: #e5484d;
+  box-shadow: 0 0 0 3px rgb(229 72 77 / 0.14);
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
 
 .form-hint { font-size: 0.74rem; color: var(--ink-3); text-align: center; }
 
@@ -3142,4 +3162,224 @@ a.contact-channel:hover {
   .pm,
   .palette-overlay,
   .pm-overlay { animation: none; }
+}
+
+/* ============================================================
+   POLISH ADDITIONS
+   ============================================================ */
+
+/* Stats strip — landing page social proof */
+.landing-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  margin: clamp(36px, 5vw, 56px) 0;
+  background: var(--bg-elev);
+}
+.stat-item {
+  padding: 22px 20px;
+  text-align: center;
+  border-right: 1px solid var(--hairline);
+}
+.stat-item:last-child { border-right: 0; }
+.stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Testimonials */
+.testimonials {
+  padding: var(--section-py) 0;
+  position: relative;
+  z-index: 1;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.testimonial-card {
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-elev);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.testimonial-card:hover {
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+.testimonial-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink);
+  font-style: italic;
+  margin-bottom: 20px;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testimonial-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: 1px solid var(--hairline-2);
+}
+.testimonial-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+.testimonial-role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Logo/tool strip */
+.logo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 24px;
+  padding: 22px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  margin: clamp(32px, 4vw, 48px) 0;
+}
+.logo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.logo-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+.logo-chip svg { flex: none; color: var(--ink-3); }
+.logo-chip:hover svg { color: var(--accent); }
+
+/* Enhanced landing CTA */
+.landing-cta h2 {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced footer */
+.footer-brand .brand { text-decoration: none; }
+.footer-brand p { line-height: 1.7; }
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  margin-top: 20px;
+}
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.footer-links a:hover { color: var(--accent); border-color: var(--accent-line); }
+
+/* Blog typography polish */
+.post-body {
+  font-size: 1.05rem;
+  color: var(--ink-2);
+  line-height: 1.85;
+}
+.post-body > * + * { margin-top: 1.35em; }
+.post-body h2 {
+  font-size: 1.85rem;
+  margin-top: 2.2em;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.post-body h3 { font-size: 1.45rem; margin-top: 1.8em; color: var(--ink); letter-spacing: -0.01em; }
+.post-body p { max-width: 68ch; }
+.post-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 24px;
+  color: var(--ink);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+.post-body ul, .post-body ol { padding-left: 1.4em; }
+.post-body li { margin: 0.5em 0; }
+.post-body hr {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 3em 0;
+}
+
+/* Global reading progress */
+.page-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 120;
+  pointer-events: none;
+  background: transparent;
+}
+.page-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bg));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform 120ms linear;
+}
+
+/* Responsive stats */
+@media (max-width: 860px) {
+  .landing-stats { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2) { border-right: 0; }
+  .stat-item:nth-child(-n + 2) { border-bottom: 1px solid var(--hairline); }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .logo-strip { gap: 10px 16px; }
+}
+@media (max-width: 560px) {
+  .landing-stats { grid-template-columns: 1fr; }
+  .stat-item { border-right: 0; border-bottom: 1px solid var(--hairline); }
+  .stat-item:last-child { border-bottom: 0; }
+  .stat-value { font-size: 1.7rem; }
+  .stat-label { font-size: 0.66rem; }
 }

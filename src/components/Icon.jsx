@@ -1,4 +1,4 @@
-const base = {
+﻿const base = {
   fill: "none",
   stroke: "currentColor",
   strokeWidth: 1.8,
@@ -8,18 +8,42 @@ const base = {
 };
 
 const Icons = {
+  search: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  ),
+  copy: (p) => (
+    <svg {...base} {...p}>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  ),
+  clock: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <polyline points="12 7 12 12 15 14" />
+    </svg>
+  ),
+  calendar: (p) => (
+    <svg {...base} {...p}>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="16" y1="3" x2="16" y2="7" />
+      <line x1="8" y1="3" x2="8" y2="7" />
+      <line x1="3" y1="11" x2="21" y2="11" />
+    </svg>
+  ),
+  arrowUpRight: (p) => (
+    <svg {...base} {...p}>
+      <line x1="7" y1="17" x2="17" y2="7" />
+      <polyline points="7 7 17 7 17 17" />
+    </svg>
+  ),
   code: (p) => (
     <svg {...base} {...p}>
       <polyline points="16 18 22 12 16 6" />
       <polyline points="8 6 2 12 8 18" />
-    </svg>
-  ),
-  server: (p) => (
-    <svg {...base} {...p}>
-      <rect x="2" y="2" width="20" height="8" rx="2" />
-      <rect x="2" y="14" width="20" height="8" rx="2" />
-      <line x1="6" y1="6" x2="6.01" y2="6" />
-      <line x1="6" y1="18" x2="6.01" y2="18" />
     </svg>
   ),
   video: (p) => (
@@ -55,6 +79,12 @@ const Icons = {
       <polyline points="12 5 19 12 12 19" />
     </svg>
   ),
+  arrowLeft: (p) => (
+    <svg {...base} {...p}>
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  ),
   arrowDown: (p) => (
     <svg {...base} {...p}>
       <line x1="12" y1="5" x2="12" y2="19" />
@@ -69,13 +99,13 @@ const Icons = {
   ),
   phone: (p) => (
     <svg {...base} {...p}>
-      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2.1z" />
+      <path d="M15.5 21C8.6 21 3 15.4 3 8.5V6a2 2 0 0 1 2-2h2.4a1 1 0 0 1 .97.76l.9 3.6a1 1 0 0 1-.45 1.08L6.9 10.5a12.5 12.5 0 0 0 6.6 6.6l1.06-.92a1 1 0 0 1 1.08-.45l3.6.9a1 1 0 0 1 .76.97V20a2 2 0 0 1-2 2z" />
     </svg>
   ),
-  pin: (p) => (
+  arrowUp: (p) => (
     <svg {...base} {...p}>
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
-      <circle cx="12" cy="10" r="3" />
+      <line x1="12" y1="19" x2="12" y2="5" />
+      <polyline points="5 12 12 5 19 12" />
     </svg>
   ),
   github: (p) => (
@@ -90,11 +120,6 @@ const Icons = {
       <circle cx="4" cy="4" r="2" />
     </svg>
   ),
-  twitter: (p) => (
-    <svg {...base} {...p}>
-      <path d="M4 4l7.2 9.3L4.4 20h2.6l5.4-5.3L17 20h3l-7.5-9.7L18.9 4h-2.6l-4.9 4.9L7 4H4z" />
-    </svg>
-  ),
   instagram: (p) => (
     <svg {...base} {...p}>
       <rect x="2" y="2" width="20" height="20" rx="5" />
@@ -107,26 +132,9 @@ const Icons = {
       <path d="M22 2.9L1.7 9.6c-1.7.7-1.7 1.6-.3 2l5.2 1.6 2 6.2c.2.6.7.7 1.2.4l2.9-2.2 5.3 3.9c1 .5 1.7.2 2-1L24 4.2c.3-1.3-.5-2-1.9-1.3zM7.6 13.4l10.2-6.5c.5-.3.9.2.5.6l-8.4 7.6-.3 3.2-2-4.9z" />
     </svg>
   ),
-  facebook: (p) => (
-    <svg {...base} {...p} fill="currentColor" stroke="none">
-      <path d="M13.5 21v-7h2.4l.36-2.9h-2.76V9.3c0-.84.23-1.42 1.45-1.42h1.55V5.3c-.27-.04-1.2-.12-2.28-.12-2.26 0-3.8 1.38-3.8 3.9v2.18H8v2.9h2.42V21h3.08z" />
-    </svg>
-  ),
   x: (p) => (
     <svg {...base} {...p} fill="currentColor" stroke="none">
       <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23z" />
-    </svg>
-  ),
-  youtube: (p) => (
-    <svg {...base} {...p}>
-      <path d="M22 12s0-3.3-.4-4.8a2.5 2.5 0 0 0-1.8-1.8C18.3 5 12 5 12 5s-6.3 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 8.7 2 12 2 12s0 3.3.4 4.8a2.5 2.5 0 0 0 1.8 1.8c1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.5.4-4.8.4-4.8z" />
-      <polygon points="10,9 15,12 10,15" />
-    </svg>
-  ),
-  behance: (p) => (
-    <svg {...base} {...p}>
-      <path d="M2 7h6a3 3 0 0 1 0 6H2V7zM2 13h7a3 3 0 0 1 0 6H2v-6z" />
-      <path d="M17 8h5M15.5 14a3.5 3.5 0 0 0 7 0v-2h-7" />
     </svg>
   ),
   download: (p) => (
@@ -171,11 +179,6 @@ const Icons = {
       <polyline points="9 18 15 12 9 6" />
     </svg>
   ),
-  star: (p) => (
-    <svg {...base} {...p} fill="currentColor" stroke="none">
-      <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.3 6.8L12 17.3 5.9 20.6l1.3-6.8L2.2 9.1l6.9-.8L12 2z" />
-    </svg>
-  ),
   send: (p) => (
     <svg {...base} {...p}>
       <line x1="22" y1="2" x2="11" y2="13" />
@@ -188,15 +191,15 @@ const Icons = {
       <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
     </svg>
   ),
+  eye: (p) => (
+    <svg {...base} {...p}>
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  ),
   zap: (p) => (
     <svg {...base} {...p}>
       <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-    </svg>
-  ),
-  user: (p) => (
-    <svg {...base} {...p}>
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
     </svg>
   ),
   monitor: (p) => (
@@ -208,7 +211,21 @@ const Icons = {
   ),
 };
 
-export default function Icon({ name, size = 24, className = "", strokeWidth }) {
+/**
+ * Icon — inline SVG lookup.
+ *
+ * `name` falls back to the code glyph so a typo degrades to a visible
+ * placeholder instead of an empty slot, and any extra prop (style, title,
+ * data-*) is forwarded so callers can tint or label the svg directly rather
+ * than wrapping it.
+ */
+export default function Icon({
+  name,
+  size = 24,
+  className = "",
+  strokeWidth,
+  ...rest
+}) {
   const Cmp = Icons[name] || Icons.code;
   return (
     <Cmp
@@ -216,6 +233,7 @@ export default function Icon({ name, size = 24, className = "", strokeWidth }) {
       height={size}
       className={className}
       strokeWidth={strokeWidth || base.strokeWidth}
+      {...rest}
     />
   );
 }

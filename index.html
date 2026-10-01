@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="apple-mobile-web-app-title" content="Tesfatseyon" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,8 +14,6 @@
     <title>Tesfatseyon Merkinh — Full-Stack Developer &amp; Video Editor</title>
     <meta name="description"
       content="Tesfatseyon Merkinh — full-stack web developer and short-form video editor based in Ethiopia. I build fast, modern websites and edit scroll-stopping short-form video." />
-    <meta name="keywords"
-      content="full-stack developer, web developer Ethiopia, React developer, Next.js, Python developer, video editor, short-form video editor, CapCut, DaVinci Resolve, UI/UX, portfolio, Tesfatseyon Merkinh" />
     <meta name="author" content="Tesfatseyon Merkinh" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tesfatseyon.dev/" />
@@ -38,8 +37,13 @@
     <meta name="twitter:description" content="Modern websites that convert, and short-form video people watch to the end." />
     <meta name="twitter:image"       content="https://tesfatseyon.dev/og.jpg" />
 
-    <!-- Structured data -->
-    <script type="application/ld+json">
+    <!-- Structured data.
+         The id matters: Seo.jsx owns the node with this id and rewrites it
+         from config on every route change. Giving the static block the same
+         id means a crawler that does not run JS still sees a valid Person,
+         and a browser that does sees exactly one node — never two
+         conflicting Person schemas. -->
+    <script type="application/ld+json" id="ld-json">
       {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -73,16 +77,26 @@
       }
     </script>
 
-    <!-- Fonts: Inter (body) + Space Grotesk (headings) -->
+    <!-- Fonts: Instrument Serif (display), Inter (body), JetBrains Mono (labels).
+         Display + mono are imported with only the weights the UI needs.
+         No rel=preload here on purpose: preloading a stylesheet as
+         "style" does not get the font files discovered any sooner, and it
+         competes with the CSS and JS for the same connection budget. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <!-- The Skills section pulls 18 brand icons from this origin. Without
+         the preconnect each one waits on its own DNS + TLS handshake. -->
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
     <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
 
-    <!-- theme-color is updated by ThemeToggle.jsx on every theme change -->
-    <meta name="theme-color" content="#090b11" />
+    <!-- Feed discovery so the blog shows up in readers and search. -->
+    <link rel="alternate" type="application/rss+xml" title="Tesfatseyon Merkinh — Blog" href="/rss.xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- The site is dark-only, so this never changes. -->
+    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="color-scheme" content="dark" />
   </head>
   <body>
     <div id="root"></div>

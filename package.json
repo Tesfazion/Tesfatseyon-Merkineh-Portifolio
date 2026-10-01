@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run check:content && vite build",
+    "check:tokens": "node tools/check_tokens.mjs",
+    "check:content": "node tools/check_studies.mjs && node tools/check_posts.mjs",
+    "check": "npm run check:tokens && npm run check:content",
     "lint": "oxlint",
     "preview": "vite preview"
   },

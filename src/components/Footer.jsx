@@ -1,26 +1,45 @@
+/**
+ * Footer — editorial grid: brand + blurb, page nav, service modes,
+ * socials — then a bottom rule with copyright and back-to-top.
+ */
 import { Link } from "react-router-dom";
-import { navLinks, profile, socials, SOCIAL_KEYS } from "../config";
-import { scrollToId } from "../hooks";
+import { navLinks, modesList, profile, socials, SOCIAL_KEYS, site } from "../config";
+import { usePrefersReducedMotion } from "../hooks";
 import Icon from "./Icon";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const reduced = usePrefersReducedMotion();
 
   return (
     <footer className="footer">
-      <div className="footer-bottom">
-        <div className="container footer-bottom-inner">
-          <Link to="/" className="brand" aria-label="Home">
-            <span className="brand-mark">{profile.initials}</span>
-            <span className="brand-name">
-              {profile.firstName}<em>.</em>
-            </span>
-          </Link>
+      <div className="container footer-inner">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <Link to="/" className="brand" aria-label="Home">
+              <span className="brand-mark">{profile.initials}</span>
+              <span className="brand-name">
+                {profile.firstName}<em>.</em>
+              </span>
+            </Link>
+            <p>
+              Full-stack developer &amp; short-form video editor.
+              Websites that convert, videos that retain.
+            </p>
+            <div className="footer-links">
+              <Link to="/">Home</Link>
+              <Link to="/blog">Blog</Link>
+              <a href={socials.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
+              <a href={`mailto:${profile.email}`}>Email</a>
+            </div>
+          </div>
 
-          <nav className="footer-nav" aria-label="Footer navigation">
-            {navLinks
-              .filter((l) => l.id !== "home")
-              .map((l) => (
+          <div>
+            <h4>Pages</h4>
+            <nav className="footer-nav" aria-label="Footer navigation">
+              <Link to="/">Home</Link>
+              <Link to="/blog">Blog</Link>
+              {navLinks.map((l) => (
                 <button
                   key={l.id}
                   type="button"
@@ -29,37 +48,53 @@ export default function Footer() {
                   {l.label}
                 </button>
               ))}
-          </nav>
+            </nav>
+          </div>
 
-          <a
-            href={socials.telegram}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-ghost btn-sm"
-          >
-            <Icon name="telegram" size={14} /> Hire Me
-          </a>
-        </div>
+          <div>
+            <h4>Services</h4>
+            <nav className="footer-nav" aria-label="Service modes">
+              {modesList.map((m) => (
+                <Link key={m.key} to={m.route}>{m.label}</Link>
+              ))}
+              <a href={`mailto:${profile.email}`}>Contact</a>
+            </nav>
+          </div>
 
-        <div className="footer-credit">
-          <div className="container">
-            <p>
-              © {year} {profile.name} · Built with React &amp; Vite
-            </p>
+          <div>
+            <h4>Follow</h4>
             <div className="hero-socials">
               {SOCIAL_KEYS.map((key) => (
                 <a
                   key={key}
                   href={socials[key]}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer me"
                   aria-label={key}
                 >
-                  <Icon name={key} size={15} />
+                  <Icon name={key} size={16} />
                 </a>
               ))}
             </div>
+            <p style={{ color: "var(--ink-3)", fontSize: "0.84rem", marginTop: 14, maxWidth: "26ch" }}>
+              {profile.availability.toLowerCase()}.
+            </p>
           </div>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <div className="container">
+          <p>© {year} {profile.name} — {site.url.replace("https://", "")}</p>
+          <button
+            type="button"
+            className="text-link"
+            onClick={() =>
+              window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })
+            }
+          >
+            Back to top <Icon name="arrowUp" size={14} />
+          </button>
         </div>
       </div>
     </footer>

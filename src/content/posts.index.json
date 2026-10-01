@@ -1,0 +1,163 @@
+[
+  {
+    "slug": "bundle-budget",
+    "title": "I set a bundle budget and immediately found 19 kB of dead weight",
+    "date": "2026-09-27",
+    "tags": [
+      "Web Development",
+      "Architecture",
+      "Craft"
+    ],
+    "excerpt": "I'd been reading bundle sizes for years and never once asked a simple question: does any of this arrive before the visitor can see it?",
+    "words": 512
+  },
+  {
+    "slug": "measure-on-your-phone",
+    "title": "Measure on the phone you actually own",
+    "date": "2026-09-26",
+    "tags": [
+      "Web Development",
+      "Craft"
+    ],
+    "excerpt": "Lighthouse on a fast laptop in a quiet office is a measurement of the machine, not the page. The only number that matters is the one on a real mid-range phone.",
+    "words": 396
+  },
+  {
+    "slug": "api-error-states",
+    "title": "The API call that failed is still your interface",
+    "date": "2026-09-24",
+    "tags": [
+      "React",
+      "Web Development",
+      "Craft"
+    ],
+    "excerpt": "The happy path is the easy half. What your component renders when the request fails, times out, or returns nothing is the half most people never build.",
+    "words": 615
+  },
+  {
+    "slug": "vertical-crop",
+    "title": "Re-cropping 16:9 for vertical without wrecking the shot",
+    "date": "2026-09-21",
+    "tags": [
+      "Shorts",
+      "Video Editing"
+    ],
+    "excerpt": "You are not cropping a video. You are re-directing the viewer's eye, three times a second, inside a frame that is half the width you shot in.",
+    "words": 600
+  },
+  {
+    "slug": "react-project-structure",
+    "title": "How I structure a React app that survives real projects",
+    "date": "2026-09-18",
+    "tags": [
+      "React",
+      "Web Development",
+      "Architecture"
+    ],
+    "excerpt": "Most React projects start fine and die of entropy. Here's the folder shape and the three rules I keep going back to on every client build.",
+    "words": 366
+  },
+  {
+    "slug": "derived-not-synced",
+    "title": "Why I stopped reaching for useEffect",
+    "date": "2026-09-11",
+    "tags": [
+      "React",
+      "Architecture"
+    ],
+    "excerpt": "Most of the useEffect calls I used to write were syncing state to other state. React can derive that. Deleting the effect deletes a whole class of bug.",
+    "words": 363
+  },
+  {
+    "slug": "props-drift",
+    "title": "Props drift: the bug that hides inside a refactor",
+    "date": "2026-09-11",
+    "tags": [
+      "React",
+      "Architecture"
+    ],
+    "excerpt": "Nothing throws. Nothing goes red. The component just quietly stops receiving what it needs, and you find out weeks later from a user.",
+    "words": 530
+  },
+  {
+    "slug": "client-brief",
+    "title": "The one question that saves a re-edit",
+    "date": "2026-09-05",
+    "tags": [
+      "Portfolio",
+      "Honesty",
+      "Video Editing"
+    ],
+    "excerpt": "Almost every revision request I've ever received was really a disagreement about the goal, disguised as a change to the edit.",
+    "words": 585
+  },
+  {
+    "slug": "where-viewers-leave",
+    "title": "Where viewers actually leave",
+    "date": "2026-09-05",
+    "tags": [
+      "Retention",
+      "Craft"
+    ],
+    "excerpt": "The first three seconds get all the attention, but that's the easy part. The real losses happen in three specific places, and they have different fixes.",
+    "words": 425
+  },
+  {
+    "slug": "three-second-hook",
+    "title": "The 3-second hook isn't a magic trick",
+    "date": "2026-09-02",
+    "tags": [
+      "Video Editing",
+      "Retention",
+      "Shorts"
+    ],
+    "excerpt": "A scroll-stopping first three seconds is just a promise. Here's the structure I use to actually keep it — cut, caption, sound, and all.",
+    "words": 264
+  },
+  {
+    "slug": "few-clients-portfolio",
+    "title": "What I put on a portfolio when I have few clients",
+    "date": "2026-08-28",
+    "tags": [
+      "Portfolio",
+      "Honesty"
+    ],
+    "excerpt": "No logo wall, no testimonials I can't verify, no client count I rounded up. What replaces all of that when you don't have a client roster yet.",
+    "words": 372
+  },
+  {
+    "slug": "handoff-checklist",
+    "title": "What I check before I hit export",
+    "date": "2026-08-28",
+    "tags": [
+      "Video Editing",
+      "Craft"
+    ],
+    "excerpt": "The edit is the visible part. The twenty minutes of checking after it are the part that decides whether a client comes back.",
+    "words": 553
+  },
+  {
+    "slug": "sound-first",
+    "title": "Most edits people call 'bad' are audio problems",
+    "date": "2026-08-21",
+    "tags": [
+      "Video Editing",
+      "Retention",
+      "Craft"
+    ],
+    "excerpt": "When a client says the edit feels amateur, the picture is almost never what they mean. It's the sound.",
+    "words": 596
+  },
+  {
+    "slug": "real-code-not-claims",
+    "title": "Why my portfolio links to real code",
+    "date": "2026-08-14",
+    "tags": [
+      "Portfolio",
+      "Honesty",
+      "Craft"
+    ],
+    "excerpt": "No mockups, no invented conversion stats, no 'trusted by' logo walls. I'd rather show you a repository than a claim I can't defend.",
+    "words": 220
+  }
+]

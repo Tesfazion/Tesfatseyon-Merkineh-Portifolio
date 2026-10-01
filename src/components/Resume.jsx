@@ -1,67 +1,67 @@
 /**
- * Resume — a compact credential strip (education, focus, availability)
- * with a real download link to this mode's PDF résumé.
+ * Resume — a compact credential strip (focus + status) with the CV
+ * opening as a wide preview instead of an instant download.
  */
-import { profile } from "../config";
-import { usePortfolio } from "../portfolio-context";
+import { useState } from "react";
+import { usePortfolio } from "../PortfolioContext.js";
 import Reveal from "./Reveal";
 import Icon from "./Icon";
+import CvModal from "./CvModal";
 
 export default function Resume() {
   const mode = usePortfolio();
+  const [cvOpen, setCvOpen] = useState(false);
 
   const rows = [
-    { icon: "briefcase", label: "Education",  value: profile.education },
-    { icon: "pin",       label: "Based in",   value: profile.location },
-    { icon: "zap",       label: "Focus",      value: mode.chips.join(" · ") },
-    { icon: "check",     label: "Status",     value: profile.availability },
-  ];
+    { icon: "zap",   label: "Focus",  value: mode.chips.join(" · ") },
+    { icon: "check", label: "Status", value: mode.roles.join(" · ") },
+  ].filter((r) => r.value);
 
   return (
-    <section id="resume" className="section section-alt">
+    <section id="resume" className="section section--rule">
       <div className="container">
-        <Reveal className="section-head">
-          <span className="section-kicker">Résumé</span>
-          <h2 className="section-title">
-            Credentials at a <span className="gradient-text">glance</span>
+        <Reveal className="sec-head">
+          <span className="kicker"><i>02</i> Résumé</span>
+          <h2 className="sec-title">
+            Who you're <em>hiring</em>
           </h2>
-          <p className="section-sub">
-            One page, no fluff. Download the full version or just ask me for it.
+          <p className="sec-sub">
+            Open the CV for the full picture — experience, tools, and
+            anything else you'd want on one page.
           </p>
         </Reveal>
 
-        <Reveal className="surface-card resume-card">
-          <ul className="resume-rows">
+        <Reveal>
+          <div className="resume-track">
             {rows.map((r) => (
-              <li className="resume-row" key={r.label}>
-                <span className="resume-row-icon" aria-hidden="true">
-                  <Icon name={r.icon} size={17} />
-                </span>
-                <span className="resume-row-text">
-                  <span className="resume-row-label">{r.label}</span>
-                  <span className="resume-row-value">{r.value}</span>
-                </span>
-              </li>
+              <div className="resume-row" key={r.label}>
+                <span className="resume-row-label">{r.label}</span>
+                <span className="resume-row-value">{r.value}</span>
+                <Icon name={r.icon} size={16} style={{ color: "var(--ink-3)" }} />
+              </div>
             ))}
-          </ul>
-
-          <div className="resume-actions">
-            <a
-              href={mode.resumeUrl}
-              download={mode.resumeName}
-              className="btn btn-primary"
-            >
-              <Icon name="download" size={16} /> Download résumé
-            </a>
-            <a
-              href={`mailto:${profile.email}?subject=${encodeURIComponent("Résumé request")}`}
-              className="text-link"
-            >
-              or request a tailored version <Icon name="arrowRight" size={14} />
-            </a>
+            <div className="resume-row">
+              <span className="resume-row-label">Full version</span>
+              <span className="resume-row-value">PDF · current · ready to send</span>
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => setCvOpen(true)}
+              >
+                <Icon name="eye" size={14} /> View
+              </button>
+            </div>
           </div>
         </Reveal>
       </div>
+
+      {cvOpen && (
+        <CvModal
+          url={mode.resumeUrl}
+          name={mode.resumeName}
+          onClose={() => setCvOpen(false)}
+        />
+      )}
     </section>
   );
 }

@@ -1,126 +1,132 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { navLinks, profile, socials } from "../config";
-import { scrollToId } from "../hooks";
+/**
+ * Navbar — fixed header with reading progress, section links, route
+ * links, an accent CTA, and a mobile drawer.
+ *
+ * The closed drawer is visibility-hidden in CSS AND wrapped by a focus
+ * trap while open, so a keyboard user can neither tab into it while it is
+ * closed nor tab out into the page behind it while it is open.
+ *
+ * Scroll work is delegated to the shared scroll store in hooks.js rather
+ * than a local listener, so the header, the read-progress bar and the
+ * floating controls all cost one rAF-throttled callback per frame.
+ */
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import { navLinks, routeLinks, profile, socials } from "../config";
+import {
+  useFocusTrap, useScrolledPast, useScrollProgress,
+  useActiveSection, useMediaQuery, useSectionNav,
+} from "../hooks";
 import Icon from "./Icon";
-import ThemeToggle from "./ThemeToggle";
+import PaletteTrigger from "./PaletteTrigger";
+
+const SECTION_IDS = navLinks.map((l) => l.id);
+const PORTFOLIO_ROUTES = ["/web", "/video"];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [open,     setOpen]     = useState(false);
-  const [active,   setActive]   = useState("home");
+  const scrolled = useScrolledPast(20);
+  const progress = useScrollProgress();
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isMobile = useMediaQuery("(max-width: 860px)");
 
-  /* Scroll progress + frosted glass trigger */
-  useEffect(() => {
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? (window.scrollY / max) * 100 : 0);
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const isPortfolio = PORTFOLIO_ROUTES.includes(pathname);
+  const active = useActiveSection(isPortfolio ? SECTION_IDS : [], { offset: 0.35 });
 
-  /* Active section tracker */
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }),
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    navLinks.forEach((l) => {
-      const el = document.getElementById(l.id);
-      if (el) obs.observe(el);
-    });
-    return () => obs.disconnect();
-  }, []);
+  const drawerRef = useRef(null);
+  const toggleRef = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  const goTo = useSectionNav();
 
-  /* Lock body scroll while drawer is open */
+  useFocusTrap(open, drawerRef, close);
+
+  /* The trap only makes sense on the drawer breakpoint; on desktop the
+     nav is always visible and must stay tabbable. */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!isMobile) setOpen(false);
+  }, [isMobile]);
+
+  /* Lock body scroll while the drawer is open. */
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
   }, [open]);
 
-  /* Close on Escape */
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const goTo = (id) => { setOpen(false); scrollToId(id); };
+  const handleSection = (id) => {
+    setOpen(false);
+    goTo(id);
+  };
 
   return (
     <>
       <header className={`nav${scrolled ? " nav-scrolled" : ""}`} role="banner">
-        {/* Reading progress bar */}
         <div
           className="nav-progress"
-          style={{ width: `${progress}%` }}
+          style={{ transform: `scaleX(${progress / 100})` }}
           aria-hidden="true"
         />
 
         <div className="nav-inner">
-          <Link
-            to="/"
-            className="brand"
-            onClick={() => setOpen(false)}
-            aria-label="Home"
-          >
+          <Link to="/" className="brand" onClick={close} aria-label="Home">
             <span className="brand-mark">{profile.initials}</span>
             <span className="brand-name">
               {profile.firstName}<em>.</em>
             </span>
           </Link>
 
-          {/* Desktop + mobile drawer nav */}
           <nav
+            ref={drawerRef}
             className={`nav-links${open ? " open" : ""}`}
             id="nav-menu"
             aria-label="Main navigation"
+            {...(open ? { "aria-modal": "true", role: "dialog" } : {})}
           >
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 type="button"
                 className={active === link.id ? "active" : ""}
-                onClick={() => goTo(link.id)}
+                onClick={() => handleSection(link.id)}
+                aria-current={active === link.id ? "true" : undefined}
               >
                 {link.label}
               </button>
             ))}
 
-            <Link
-              to="/"
-              className="nav-cta nav-cta-ghost"
-              onClick={() => setOpen(false)}
-            >
-              <Icon name="menu" size={14} />
-              Services
-            </Link>
-
-            {/* Theme toggle lives in the drawer on mobile, in the bar on desktop */}
-            <div className="nav-drawer-theme">
-              <ThemeToggle inline />
-            </div>
+            {routeLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={pathname === link.to ? "active" : ""}
+                aria-current={pathname === link.to ? "page" : undefined}
+                onClick={close}
+              >
+                {link.label}
+              </Link>
+            ))}
 
             <a
               href={socials.telegram}
               target="_blank"
-              rel="noreferrer"
-              className="btn btn-primary nav-cta"
+              rel="noopener noreferrer"
+              className="btn btn-sm nav-cta"
+              onClick={close}
             >
-              <Icon name="telegram" size={15} />
+              <Icon name="telegram" size={14} />
               Hire Me
             </a>
           </nav>
 
-          {/* Desktop-only controls */}
           <div className="nav-actions">
-            <ThemeToggle inline />
+            <div className="nav-desktop-only">
+              <PaletteTrigger />
+            </div>
             <button
+              ref={toggleRef}
+              type="button"
               className="nav-toggle"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
@@ -133,12 +139,11 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Dark overlay — tap to close drawer */}
       {open && (
         <div
-          className="nav-overlay visible"
+          className="nav-overlay"
           aria-hidden="true"
-          onClick={() => setOpen(false)}
+          onClick={close}
         />
       )}
     </>

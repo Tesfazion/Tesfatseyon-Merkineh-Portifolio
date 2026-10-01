@@ -1,80 +1,126 @@
+/**
+ * Contact — direct channels plus a form that composes an email.
+ *
+ * There is no backend on a static site, so the form does the honest thing:
+ * it validates properly, then hands a fully composed message to the
+ * visitor's mail client. It never claims a message was "sent" — the
+ * success panel tells the truth about what just happened, because a fake
+ * confirmation is worse than no confirmation.
+ */
 import { useState } from "react";
 import { profile, socials, SOCIAL_KEYS } from "../config";
-import { usePortfolio } from "../portfolio-context";
+import { usePortfolio } from "../PortfolioContext.js";
 import Reveal from "./Reveal";
 import Icon from "./Icon";
 
+/* Deliberately permissive: the only thing worse than a false rejection is
+   blocking a valid address that happens to be unusual. */
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const validate = (f) => {
+  const errors = {};
+  if (!f.name.trim()) errors.name = "Tell me who you are.";
+  if (!f.email.trim()) errors.email = "I need an address to reply to.";
+  else if (!EMAIL.test(f.email.trim())) errors.email = "That address doesn't look right.";
+  if (f.message.trim().length < 12) {
+    errors.message = "A sentence or two about the project helps me reply usefully.";
+  }
+  return errors;
+};
+
 export default function Contact() {
   const mode = usePortfolio();
-  const [sent,    setSent]    = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [fields,  setFields]  = useState({
+  const [status, setStatus] = useState("idle"); // idle | ready | sent
+  const [errors, setErrors] = useState({});
+  const [copied, setCopied] = useState(false);
+  const [fields, setFields] = useState({
     name: "", email: "", topic: mode.formTopics[0], message: "",
   });
 
-  /* Telegram leads — it is the fastest way to reach me. */
   const channels = [
+    { icon: "telegram", label: "Telegram", value: "@Zizo1616", href: socials.telegram, external: true },
+    { icon: "mail", label: "Email", value: profile.email, href: `mailto:${profile.email}`, copy: profile.email },
     {
-      icon: "telegram", label: "Telegram",
-      value: "@Zizo1616",
-      href: socials.telegram,
-      external: true,
-    },
-    {
-      icon: "mail", label: "Email",
-      value: profile.email,
-      href: `mailto:${profile.email}`,
-    },
-    {
-      icon: "phone", label: "Phone / WhatsApp",
-      value: profile.phone,
+      icon: "phone", label: "Phone / WhatsApp", value: profile.phone,
       href: `tel:${profile.phone.replace(/\s/g, "")}`,
-    },
-    {
-      icon: "pin", label: "Location",
-      value: profile.location,
     },
   ];
 
-  const onChange = (e) =>
-    setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFields((f) => ({ ...f, [name]: value }));
+    // Clear a field's error as soon as it is edited, rather than making
+    // the visitor submit again to find out whether the fix worked.
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+    if (status === "sent") setStatus("idle");
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const subject = encodeURIComponent(
-      `[Portfolio] ${fields.topic} — from ${fields.name}`
-    );
+  const onBlur = (e) => {
+    const { name } = e.target;
+    const found = validate(fields);
+    if (found[name]) setErrors((prev) => ({ ...prev, [name]: found[name] }));
+  };
+
+  const composeMailto = () => {
+    const subject = encodeURIComponent(`[Portfolio] ${fields.topic} — from ${fields.name}`);
     const body = encodeURIComponent(
       `Name: ${fields.name}\nEmail: ${fields.email}\nTopic: ${fields.topic}\n\n${fields.message}`
     );
-    window.location.href =
-      `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setTimeout(() => { setLoading(false); setSent(true); }, 800);
+    return `mailto:${profile.email}?subject=${subject}&body=${body}`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const found = validate(fields);
+    setErrors(found);
+
+    if (Object.keys(found).length > 0) {
+      // Move focus to the first problem so keyboard and screen-reader
+      // users are not left wondering why nothing happened.
+      document.getElementById(`cf-${Object.keys(found)[0]}`)?.focus();
+      return;
+    }
+
+    window.location.href = composeMailto();
+    setStatus("sent");
+  };
+
+  const copyEmail = async (value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${value}`;
+    }
   };
 
   return (
     <section id="contact" className="section">
       <div className="container">
-        <Reveal className="section-head">
-          <span className="section-kicker">Contact</span>
-          <h2 className="section-title">
-            Let's build something{" "}
-            <span className="gradient-text">together</span>
+        <Reveal className="sec-head">
+          <span className="kicker"><i>06</i> Contact</span>
+          <h2 className="sec-title">
+            Let&apos;s build something{" "}
+            <em>together</em>
           </h2>
-          <p className="section-sub">
-            Telegram is the fastest way to reach me — or send the form and
-            I'll reply by email.
+          <p className="sec-sub">
+            Telegram is the fastest way to reach me — or fill in the form and
+            your email client will open with it ready to send. I usually
+            respond within a few hours during the week.
           </p>
         </Reveal>
 
         <div className="contact-grid">
-
           {/* ── Info ── */}
           <Reveal className="contact-info">
-            {channels.map((c) => {
-              const inner = (
-                <>
+            {channels.map((c) => (
+              <div key={c.label} className="contact-channel-row">
+                <a
+                  href={c.href}
+                  className="contact-channel"
+                  {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
                   <span className="contact-icon" aria-hidden="true">
                     <Icon name={c.icon} size={18} />
                   </span>
@@ -82,29 +128,28 @@ export default function Contact() {
                     <span className="contact-label">{c.label}</span>
                     <span className="contact-value">{c.value}</span>
                   </span>
-                  {c.external && (
-                    <Icon name="external" size={14} className="contact-ext" />
-                  )}
-                </>
-              );
-
-              return c.href ? (
-                <a
-                  key={c.label}
-                  href={c.href}
-                  className="contact-channel"
-                  {...(c.external
-                    ? { target: "_blank", rel: "noreferrer" }
-                    : {})}
-                >
-                  {inner}
+                  {c.external && <Icon name="external" size={14} className="contact-ext" />}
                 </a>
-              ) : (
-                <div key={c.label} className="contact-channel is-static">
-                  {inner}
-                </div>
-              );
-            })}
+                {c.copy && (
+                  <button
+                    type="button"
+                    className="contact-copy"
+                    onClick={() => copyEmail(c.copy)}
+                    aria-label={`Copy ${c.copy} to the clipboard`}
+                  >
+                    <Icon name={copied ? "check" : "copy"} size={14} />
+                    <span className="sr-only">
+                      {copied ? "Copied" : "Copy email address"}
+                    </span>
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <div className="contact-response-badge">
+              <span className="pulse-dot" aria-hidden="true" />
+              Usually replies within 2 hours
+            </div>
 
             <div className="contact-socials">
               <p>Find me online</p>
@@ -114,10 +159,10 @@ export default function Contact() {
                     key={key}
                     href={socials[key]}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer me"
                     aria-label={key}
                   >
-                    <Icon name={key} size={17} />
+                    <Icon name={key} size={16} />
                   </a>
                 ))}
               </div>
@@ -126,61 +171,84 @@ export default function Contact() {
 
           {/* ── Form ── */}
           <Reveal delay={100}>
-            {sent ? (
+            {status === "sent" ? (
               <div className="form-success" role="status">
                 <span className="form-success-icon">
                   <Icon name="check" size={24} />
                 </span>
-                <h3>Your email client is ready</h3>
+                <h3>Your email client should be open</h3>
                 <p>
-                  Check the draft that just opened and hit send. I reply to
-                  most messages within 24 hours.
+                  Nothing has been sent yet — the message is sitting in a draft
+                  waiting for you to press send. If nothing opened, copy this
+                  address and email me directly: <strong>{profile.email}</strong>
                 </p>
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => {
-                    setSent(false);
-                    setFields({
-                      name: "", email: "",
-                      topic: mode.formTopics[0], message: "",
-                    });
-                  }}
-                >
-                  Send another
-                </button>
+                <div className="form-success-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => window.location.href = composeMailto()}
+                  >
+                    <Icon name="send" size={14} /> Open it again
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => copyEmail(profile.email)}
+                  >
+                    <Icon name="copy" size={14} /> {copied ? "Copied" : "Copy address"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => {
+                      setStatus("idle");
+                      setFields({ name: "", email: "", topic: mode.formTopics[0], message: "" });
+                    }}
+                  >
+                    Write another
+                  </button>
+                </div>
               </div>
             ) : (
-              <form
-                className="contact-form"
-                onSubmit={handleSubmit}
-              >
+              <form className="contact-form" onSubmit={handleSubmit} noValidate>
                 <div className="form-row">
                   <div className="form-field">
                     <label htmlFor="cf-name">Name</label>
                     <input
                       id="cf-name" name="name" type="text"
                       placeholder="John Doe"
-                      value={fields.name} onChange={onChange}
+                      value={fields.name} onChange={onChange} onBlur={onBlur}
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "cf-name-err" : undefined}
                       required autoComplete="name"
+                      className={errors.name ? "form-field--error" : ""}
                     />
+                    {errors.name && (
+                      <span className="form-error" id="cf-name-err" role="alert">{errors.name}</span>
+                    )}
                   </div>
                   <div className="form-field">
                     <label htmlFor="cf-email">Email</label>
                     <input
                       id="cf-email" name="email" type="email"
                       placeholder="john@example.com"
-                      value={fields.email} onChange={onChange}
+                      value={fields.email} onChange={onChange} onBlur={onBlur}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "cf-email-err" : undefined}
                       required autoComplete="email"
+                      className={errors.email ? "form-field--error" : ""}
                     />
+                    {errors.email && (
+                      <span className="form-error" id="cf-email-err" role="alert">{errors.email}</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="form-field">
                   <label htmlFor="cf-topic">What do you need?</label>
                   <select
-                    id="cf-topic" name="topic"
-                    value={fields.topic} onChange={onChange}
+                    id="cf-topic" name="topic" value={fields.topic} onChange={onChange}
+                    className={errors.topic ? "form-field--error" : ""}
                   >
                     {mode.formTopics.map((t) => (
                       <option key={t} value={t}>{t}</option>
@@ -192,30 +260,29 @@ export default function Contact() {
                   <label htmlFor="cf-message">Message</label>
                   <textarea
                     id="cf-message" name="message" rows="5"
-                    placeholder="Tell me about your project or opportunity…"
-                    value={fields.message} onChange={onChange}
+                    placeholder="Tell me about your project, timeline, and budget range…"
+                    value={fields.message} onChange={onChange} onBlur={onBlur}
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "cf-message-err" : undefined}
                     required
+                    className={errors.message ? "form-field--error" : ""}
                   />
+                  {errors.message && (
+                    <span className="form-error" id="cf-message-err" role="alert">{errors.message}</span>
+                  )}
                 </div>
 
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block"
-                  disabled={loading}
-                >
-                  {loading
-                    ? "Opening mail client…"
-                    : <><Icon name="send" size={16} /> Send Message</>
-                  }
+                <button type="submit" className="btn btn-primary btn-block">
+                  <Icon name="send" size={16} /> Send Message
                 </button>
 
                 <p className="form-hint">
-                  Your default email client will open with the message pre-filled.
+                  Opens your email client with the message pre-filled — you
+                  press send, I reply within 2 hours on weekdays.
                 </p>
               </form>
             )}
           </Reveal>
-
         </div>
       </div>
     </section>

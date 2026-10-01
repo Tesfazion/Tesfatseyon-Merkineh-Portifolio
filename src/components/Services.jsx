@@ -1,4 +1,8 @@
-import { usePortfolio } from "../portfolio-context";
+/**
+ * Services — a numbered ledger of what I can do. Numbered on the left,
+ * honest description, icon on the right.
+ */
+import { usePortfolio } from "../PortfolioContext.js";
 import Reveal from "./Reveal";
 import Icon from "./Icon";
 
@@ -6,30 +10,36 @@ export default function Services() {
   const mode = usePortfolio();
 
   return (
-    <section id="services" className="section">
+    <section id="services" className="section section--rule">
       <div className="container">
-        <Reveal className="section-head">
-          <span className="section-kicker">Services</span>
-          <h2 className="section-title">
-            What I can <span className="gradient-text">do for you</span>
+        <Reveal className="sec-head">
+          <span className="kicker"><i>04</i> Services</span>
+          <h2 className="sec-title">
+            What I can <em>do for you</em>
           </h2>
-          <p className="section-sub">
-            Clear scope, reliable delivery, and work that's built to last and grow.
+          <p className="sec-sub">
+            Clear scope, reliable delivery, and work built to last and grow.
           </p>
         </Reveal>
 
-        <div className="services-grid">
-          {mode.services.map((s, i) => (
-            <Reveal key={s.title} delay={(i % 2) * 70} className="surface-card service-card">
-              <span className="service-icon">
-                <Icon name={s.icon} size={22} />
-              </span>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
-              <span className="service-num" aria-hidden="true">0{i + 1}</span>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal>
+          <div className="services-list">
+            {mode.services.map((s, i) => (
+              <div className="service-item" key={s.title}>
+                <span className="service-item-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+                </div>
+                <span className="service-item-icon" aria-hidden="true">
+                  <Icon name={s.icon} size={19} />
+                </span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
