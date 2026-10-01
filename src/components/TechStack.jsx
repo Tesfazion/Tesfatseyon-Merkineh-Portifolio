@@ -9,15 +9,22 @@
  * replayed for prefers-reduced-motion so nothing moves for a reader who
  * has asked for calm. No self-assigned percentage bars.
  */
-import { useState } from "react";
 import { usePortfolio } from "../PortfolioContext.js";
 import Reveal from "./Reveal";
 import Icon from "./Icon";
 
 function TechIcon({ tech }) {
-  const [failed, setFailed] = useState(false);
+  const nameMap = {
+    capcut: "capcut",
+    "adobe premiere pro": "premierepro",
+    "adobe after effects": "aftereffects",
+    photoshop: "photoshop",
+    audition: "audition",
+  };
 
-  if (!tech.slug || failed) {
+  const iconName = nameMap[tech.name.toLowerCase()];
+
+  if (!iconName) {
     return (
       <span className="tech-dot" style={{ background: tech.color }} aria-hidden="true" />
     );
@@ -25,15 +32,7 @@ function TechIcon({ tech }) {
 
   return (
     <span className="tech-icon" aria-hidden="true">
-      <img
-        src={`https://cdn.simpleicons.org/${tech.slug}/${tech.color.replace("#", "")}`}
-        alt=""
-        width="20"
-        height="20"
-        loading="lazy"
-        decoding="async"
-        onError={() => setFailed(true)}
-      />
+      <Icon name={iconName} size={20} style={{ color: tech.color }} />
     </span>
   );
 }

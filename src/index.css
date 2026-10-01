@@ -516,11 +516,10 @@ textarea:focus-visible {
 .hero-type-arrow { color: var(--ink-4); flex-shrink: 0; transition: color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
 .hero-type:hover .hero-type-arrow { color: var(--type-accent); transform: translateX(4px); }
 
-/* Section backgrounds — real photo, theme-aware scrim, and accent mesh
-   stacked in ONE pseudo-element (CSS first = topmost):
-     accent mesh  →  scrim  →  photo
-   Scrim is intentionally light — the photo should be visible but subtle.
-   Ken Burns gives a slow cinematic drift to otherwise still images.    */
+/* Section backgrounds — per-section atmosphere, no mismatched photos.
+   Each section gets its own mood through CSS gradients and accent mesh.
+   Photo support is intentionally removed so sections never look like
+   the wrong visual context. */
 .hero,
 .landing-hero,
 #about,
@@ -550,46 +549,73 @@ textarea:focus-visible {
   z-index: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(48% 42% at 8% 4%,    rgb(var(--accent-rgb) / var(--mesh-1)), transparent 68%),
-    radial-gradient(44% 40% at 94% 10%,  rgb(var(--accent-rgb) / var(--mesh-2)), transparent 70%),
-    radial-gradient(52% 46% at 78% 96%,  rgb(var(--accent-rgb) / var(--mesh-2)), transparent 68%),
-    radial-gradient(40% 38% at 26% 88%,  rgb(var(--mesh-hue) / var(--mesh-3)), transparent 70%),
-    var(--section-scrim),
-    var(--section-photo, none);
-  /* MUST list a size for EVERY background-image layer — a single "cover"
-     only covers the first layer; the rest default to "auto auto" which
-     leaves the photo thumbnail-sized. */
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    cover;
-  background-position:
-    center,
-    center,
-    center,
-    center,
-    center,
-    center;
+    radial-gradient(48% 42% at 8% 4%, rgba(var(--accent-rgb), var(--mesh-1)), transparent 68%),
+    radial-gradient(44% 40% at 94% 10%, rgba(var(--accent-rgb), var(--mesh-2)), transparent 70%),
+    radial-gradient(52% 46% at 78% 96%, rgba(var(--accent-rgb), var(--mesh-2)), transparent 68%),
+    radial-gradient(40% 38% at 26% 88%, rgba(var(--mesh-hue), var(--mesh-3)), transparent 70%),
+    var(--section-scrim);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-position: center, center, center, center, center;
   background-repeat: no-repeat;
 }
 
-/* Assign photos — each section gets a fitting image */
-.hero             { --section-photo: url("/backgrounds/hero-bg.jpg"); }
-.landing-hero     { --section-photo: url("/backgrounds/hero-bg.jpg"); }
-#about            { --section-photo: url("/backgrounds/about-bg.jpg"); }
-#skills           { --section-photo: url("/backgrounds/skills-bg.jpg"); }
-#services         { --section-photo: url("/backgrounds/services-bg.jpg"); }
-#work             { --section-photo: url("/backgrounds/work-bg.jpg"); }
-#process          { --section-photo: url("/backgrounds/process-bg.jpg"); }
-#testimonials     { --section-photo: url("/backgrounds/testimonials-bg.jpg"); }
-.landing-cta      { --section-photo: url("/backgrounds/contact-bg.jpg"); }
-#contact          { --section-photo: url("/backgrounds/contact-bg.jpg"); }
-
-/* Landing service cards use work photo lightly */
-.landing-pick     { --section-photo: url("/backgrounds/work-bg.jpg"); }
+/* Per-section atmosphere — subtle colour temperature shifts */
+.hero::before,
+.landing-hero::before {
+  background-image:
+    radial-gradient(120% 80% at 50% 30%, rgba(var(--accent-rgb), 0.18), transparent 60%),
+    radial-gradient(60% 50% at 80% 70%, rgba(var(--mesh-hue), 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.32) 0%, rgba(10,10,11,0.52) 100%);
+}
+#about::before {
+  background-image:
+    radial-gradient(90% 70% at 20% 20%, rgba(var(--accent-rgb), 0.10), transparent 55%),
+    radial-gradient(70% 60% at 85% 75%, rgba(var(--mesh-hue), 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.28) 0%, rgba(10,10,11,0.44) 100%);
+}
+#skills::before {
+  background-image:
+    radial-gradient(80% 60% at 70% 15%, rgba(var(--accent-rgb), 0.12), transparent 55%),
+    radial-gradient(70% 55% at 15% 80%, rgba(var(--mesh-hue), 0.10), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.30) 0%, rgba(10,10,11,0.48) 100%);
+}
+#services::before {
+  background-image:
+    radial-gradient(85% 65% at 30% 25%, rgba(var(--accent-rgb), 0.11), transparent 55%),
+    radial-gradient(75% 60% at 80% 70%, rgba(var(--mesh-hue), 0.09), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.28) 0%, rgba(10,10,11,0.46) 100%);
+}
+#work::before {
+  background-image:
+    radial-gradient(80% 60% at 60% 20%, rgba(var(--accent-rgb), 0.12), transparent 55%),
+    radial-gradient(70% 55% at 20% 75%, rgba(var(--mesh-hue), 0.09), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.30) 0%, rgba(10,10,11,0.48) 100%);
+}
+#process::before {
+  background-image:
+    radial-gradient(80% 60% at 50% 20%, rgba(var(--accent-rgb), 0.10), transparent 55%),
+    radial-gradient(70% 55% at 85% 80%, rgba(var(--mesh-hue), 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.26) 0%, rgba(10,10,11,0.42) 100%);
+}
+#testimonials::before {
+  background-image:
+    radial-gradient(80% 60% at 25% 30%, rgba(var(--accent-rgb), 0.10), transparent 55%),
+    radial-gradient(70% 55% at 75% 70%, rgba(var(--mesh-hue), 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.28) 0%, rgba(10,10,11,0.44) 100%);
+}
+#contact::before,
+.landing-cta::before {
+  background-image:
+    radial-gradient(100% 70% at 50% 30%, rgba(var(--accent-rgb), 0.16), transparent 55%),
+    radial-gradient(70% 55% at 20% 75%, rgba(var(--mesh-hue), 0.10), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.36) 0%, rgba(10,10,11,0.56) 100%);
+}
+.landing-pick::before {
+  background-image:
+    radial-gradient(80% 60% at 50% 20%, rgba(var(--accent-rgb), 0.10), transparent 55%),
+    radial-gradient(70% 55% at 85% 75%, rgba(var(--mesh-hue), 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(10,10,11,0.26) 0%, rgba(10,10,11,0.42) 100%);
+}
 
 /* Content above the pseudo-element */
 .hero > *,
@@ -603,39 +629,6 @@ textarea:focus-visible {
 #process > .container,
 #testimonials > .container,
 #contact > .container { position: relative; z-index: 2; }
-
-/* Ken Burns — slow imperceptible pan so stills feel alive */
-@keyframes kenburns {
-  from { transform: scale(1.00) translate(0,    0);    }
-  to   { transform: scale(1.05) translate(-10px, -7px); }
-}
-@keyframes kenburns-r {
-  from { transform: scale(1.00) translate(0,   0);   }
-  to   { transform: scale(1.05) translate(10px, 6px); }
-}
-
-.hero::before,
-.landing-hero::before {
-  transform-origin: 30% 70%;
-  animation: kenburns 28s ease-in-out infinite alternate;
-}
-#about::before,
-#work::before,
-#contact::before,
-.landing-cta::before {
-  transform-origin: 70% 30%;
-  animation: kenburns-r 34s ease-in-out infinite alternate;
-}
-#skills::before,
-#services::before {
-  transform-origin: 20% 60%;
-  animation: kenburns 40s ease-in-out infinite alternate;
-}
-#process::before,
-#testimonials::before {
-  transform-origin: 80% 40%;
-  animation: kenburns-r 36s ease-in-out infinite alternate;
-}
 
 /* Soft edge vignette — keeps text readable without dimming the centre */
 .hero::after,
