@@ -60,10 +60,7 @@ export default function BlogIndex() {
       <Navbar />
 
       <main>
-        <section
-          className="container blog-head"
-          style={{ paddingTop: "calc(var(--nav-h) + clamp(40px, 6vw, 72px))" }}
-        >
+        <section className="container blog-head">
           <Reveal className="sec-head">
             <span className="kicker"><i>Journal</i> Writing</span>
             <h1 className="sec-title">Notes on <em>building</em> &amp; <em>editing</em></h1>
@@ -90,7 +87,7 @@ export default function BlogIndex() {
           )}
         </section>
 
-        <section className="container" style={{ paddingBottom: "var(--section-py)" }}>
+        <section className="container blog-archive">
           {visible.length === 0 ? (
             <p className="empty-state">No posts under “{activeTag}” yet.</p>
           ) : (

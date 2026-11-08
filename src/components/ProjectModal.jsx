@@ -10,6 +10,7 @@
 import { useEffect, useRef } from "react";
 import { useFocusTrap } from "../hooks";
 import { caseStudies } from "../content/case-studies";
+import { coverFor } from "../config";
 import Icon from "./Icon";
 
 /**
@@ -51,6 +52,7 @@ export default function ProjectModal({ project, onClose }) {
   const [a, b] = project.gradient || [project.accent, project.accent];
   const study = caseStudies[project.study] || null;
   const rows = facts(project);
+  const cover = coverFor(project);
 
   return (
     <div
@@ -66,7 +68,17 @@ export default function ProjectModal({ project, onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{ "--pm-a": a, "--pm-b": b, "--pm-accent": project.accent }}
       >
-        <div className="pm-cover">
+        <div className={`pm-cover${cover ? " has-cover" : ""}`}>
+          {cover && (
+            <img
+              className="pm-cover-img"
+              src={cover}
+              alt=""
+              width="1120"
+              height="632"
+              decoding="async"
+            />
+          )}
           <span className="project-cat">{project.category}</span>
           <h2 id="pm-title">{project.title}</h2>
           <button

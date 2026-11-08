@@ -9,9 +9,10 @@
  *    floating controls); each with its own listener they would each force
  *    a layout read on every scroll event, which is the classic jank bug.
  *
- *  • Every animated hook honours prefers-reduced-motion. A CSS media
- *    query can stop a transition, but it cannot stop a JS timer loop —
- *    the typewriter and the count-up would keep running regardless.
+ *  • Nothing here runs on a timer any more. The only motion left is the
+ *    CSS reveal, which the reduced-motion query in base.css switches off;
+ *    the typewriter and count-up hooks were removed with the redesign
+ *    rather than left behind as dead code.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -261,50 +262,6 @@ const cssVar = (name) => {
 
 /* ── Animation hooks ────────────────────────────────────── */
 
-export function useTypewriter(words, typeSpeed = 70, deleteSpeed = 35, pause = 1700) {
-  const [index, setIndex] = useState(0);
-  const [text, setText] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const reduced = usePrefersReducedMotion();
-
-  /* Held in a ref so the timer effect depends on a stable string rather
-     than a fresh array identity every render. */
-  const key = (Array.isArray(words) ? words : []).filter(Boolean).join("\u0000");
-  const listRef = useRef([]);
-  listRef.current = key ? key.split("\u0000") : [];
-
-  /* With reduced motion we show the first role statically: no typing,
-     no caret blink, and nothing that keeps a timer alive. */
-  useEffect(() => {
-    if (reduced) {
-      setText(listRef.current[0] || "");
-      setDeleting(false);
-      setIndex(0);
-    }
-  }, [reduced, key]);
-
-  useEffect(() => {
-    const list = listRef.current;
-    if (reduced || list.length === 0) return;
-    const word = list[index % list.length];
-    let timeout;
-
-    if (!deleting && text === word) {
-      timeout = setTimeout(() => setDeleting(true), pause);
-    } else if (deleting && text === "") {
-      setDeleting(false);
-      setIndex((i) => (i + 1) % list.length);
-    } else {
-      timeout = setTimeout(() => {
-        setText(word.substring(0, text.length + (deleting ? -1 : 1)));
-      }, deleting ? deleteSpeed : typeSpeed);
-    }
-    return () => clearTimeout(timeout);
-  }, [text, deleting, index, reduced, key, typeSpeed, deleteSpeed, pause]);
-
-  return text;
-}
-
 export function useInView(threshold = 0.15, { once = true } = {}) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -338,32 +295,6 @@ export function useInView(threshold = 0.15, { once = true } = {}) {
   return [ref, inView];
 }
 
-export function useCountUp(target, duration = 2000) {
-  const [value, setValue] = useState(0);
-  const [ref, inView] = useInView(0.5);
-  const reduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduced) {
-      setValue(target);
-      return;
-    }
-    let frame;
-    const start = performance.now();
-    const tick = (now) => {
-      const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(Math.floor(target * eased));
-      if (p < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [inView, target, duration, reduced]);
-
-  return [value, ref];
-}
-
 /* ── Focus management ───────────────────────────────────── */
 
 const FOCUSABLE = [
@@ -389,9 +320,8 @@ const visible = (el) =>
  * inline arrows, so a dep on it would tear the trap down and rebuild it on
  * every parent render — and because the effect captures the opener, each
  * rebuild re-snapshots `document.activeElement` (already inside the dialog)
- * and then immediately restores focus to it. In the CV modal, whose parent
- * re-renders on a ~70ms typewriter tick, that made Tab unable to advance
- * past the first link. Escape still works: the handler reads the live ref.
+ * and then immediately restores focus to it. Escape still works: the
+ * handler reads the live ref.
  */
 export function useFocusTrap(active, containerRef, onEscape) {
   const returnTo = useRef(null);

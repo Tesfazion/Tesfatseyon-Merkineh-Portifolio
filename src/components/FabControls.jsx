@@ -1,8 +1,8 @@
 /**
  * FabControls — the single floating action button for the page.
  *
- * One control in the bottom-right corner: scroll-to-top. The site is
- * dark-only by design, so there is no theme toggle to sit beside it.
+ * One control in the bottom-right corner: scroll-to-top. The site has a
+ * single fixed theme, so there is no toggle to sit beside it.
  */
 import { usePrefersReducedMotion, useScrolledPast } from "../hooks";
 import Icon from "./Icon";

@@ -21,13 +21,13 @@ export default function Resume() {
     <section id="resume" className="section section--rule">
       <div className="container">
         <Reveal className="sec-head">
-          <span className="kicker"><i>02</i> Résumé</span>
+          <span className="kicker"><i>05</i> Résumé</span>
           <h2 className="sec-title">
-            Who you're <em>hiring</em>
+            The short <em>version</em>
           </h2>
           <p className="sec-sub">
             Open the CV for the full picture — experience, tools, and
-            anything else you'd want on one page.
+            anything else you'd want on one page before a first call.
           </p>
         </Reveal>
 

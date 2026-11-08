@@ -2,7 +2,11 @@
  * PortfolioPage — renders the correct service mode (web / video).
  *
  * Section order:
- *   Hero → About → Resume → Skills → Services → Work → Contact
+ *   Hero → Work → About → Services → Skills → Résumé → Contact
+ *
+ * Work comes first on purpose: a hiring manager or a client is looking for
+ * evidence before biography. The numbering in each section head and the
+ * order of navLinks in config.js follow this sequence.
  *
  * The mode accent is set centrally in App.jsx from the route
  * (useMode in Shell), so it is not repeated here.
@@ -41,11 +45,11 @@ export default function PortfolioPage({ modeKey }) {
 
       <main>
         <Hero />
-        <About />
-        <Resume />
-        <TechStack />
-        <Services />
         <Projects />
+        <About />
+        <Services />
+        <TechStack />
+        <Resume />
         <Contact />
       </main>
 

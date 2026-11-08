@@ -3,7 +3,7 @@
  * numbered highlight rail on the right.
  */
 import { useState } from "react";
-import { profile } from "../config";
+import { profile, company } from "../config";
 import { scrollToId } from "../hooks";
 import { usePortfolio } from "../PortfolioContext.js";
 import Reveal from "./Reveal";
@@ -15,6 +15,19 @@ export default function About() {
 
   const meta = [
     { dt: "Focus",  dd: mode.chips.join(" · ") },
+    {
+      dt: "Studio",
+      dd: (
+        <a
+          href={company.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="about-studio-link"
+        >
+          {company.name} · {company.role}
+        </a>
+      ),
+    },
     { dt: "Based in", dd: profile.location },
     { dt: "Status", dd: profile.availability },
   ];
@@ -23,7 +36,7 @@ export default function About() {
     <section id="about" className="section section--rule">
       <div className="container">
         <Reveal className="sec-head">
-          <span className="kicker"><i>01</i> About</span>
+          <span className="kicker"><i>02</i> About</span>
           <h2 className="sec-title">
             The person behind <em>the work</em>
           </h2>
@@ -89,18 +102,14 @@ export default function About() {
           {/* ── Bio + highlights ── */}
           <div>
             <Reveal>
-              {mode.about.map((para, i) => (
-                <p
-                  key={i}
-                  className="sec-sub"
-                  style={{ marginBottom: 18 }}
-                >
-                  {para}
-                </p>
-              ))}
+              <div className="about-bio">
+                {mode.about.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
             </Reveal>
 
-            <Reveal delay={70}>
+            <Reveal delay={70} className="about-highlights">
               <ul className="highlight-list">
                 {mode.highlights.map((h, i) => (
                   <li key={h}>

@@ -1,0 +1,95 @@
+/* ============================================================
+   TOKENS — "Paper & Ink", light pass
+   ------------------------------------------------------------
+   Why this file changed: the first pass used a warm beige page
+   (#f3f0e7) with a beige recess (#e9e4d6), and then stacked three
+   dark masses on top of it — an ink footer, ink-filled primary
+   buttons, and near-black code panels. Beige + black is a heavy
+   combination: the page reads dusty and the black blocks dominate.
+   This pass keeps the printed-editorial idea but moves the ground
+   to a near-white warm paper, which lets the hairlines and the
+   accent do the work instead of the ink.
+
+   Accent strategy is unchanged: a mode sets only an RGB triple and
+   every tint derives from it, so /web ↔ /video re-themes the site
+   from one line in config.js (+ the data-mode block below).
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* -- Canvas -------------------------------------------------
+     Near-white, warmed by a hint of yellow so it reads as paper
+     rather than as a UI grey. The recess is only just visible —
+     enough to seat an image, not enough to look like a shadow. */
+  --paper:      #fbfaf6;
+  --paper-deep: #f2efe7;
+  --card:       #ffffff;
+  --ink-wash:   #26231c; /* inverted panels — a warm charcoal, not black */
+
+  /* -- Ink ----------------------------------------------------
+     Not pure black: #1f1c16 keeps a 15:1 contrast on the paper
+     while losing the hard, photocopied edge of #000. */
+  --ink:   #1f1c16;
+  --ink-2: #565049;
+  --ink-3: #8b8478;
+  --ink-4: #bdb5a4;
+
+  /* -- Rules: every division on this site is a hairline --------- */
+  --rule:        rgba(31, 28, 22, 0.12);
+  --rule-strong: rgba(31, 28, 22, 0.28);
+  --rule-ink:    rgba(251, 250, 246, 0.18); /* on inverted panels */
+
+  /* -- Accent (defaults to the developer vermilion) -------------
+     Brightened from #be3510: on near-white paper a darker vermilion
+     looked muddy and lost its energy. Both accents still clear
+     4.5:1 as body text on --paper. */
+  --accent-rgb: 194, 65, 12;
+  --accent:      rgb(var(--accent-rgb));
+  --accent-ink:  rgb(var(--accent-rgb));
+  --accent-bg:   rgb(var(--accent-rgb) / 0.07);
+  --accent-bg-2: rgb(var(--accent-rgb) / 0.14);
+  --accent-line: rgb(var(--accent-rgb) / 0.38);
+
+  /* -- Status ------------------------------------------------- */
+  --green:    #17795a;
+  --green-bg: rgb(23, 121, 90 / 0.10);
+
+  /* -- Layout ------------------------------------------------- */
+  --container:  1300px;
+  --gut:        clamp(18px, 4vw, 44px);
+  --nav-h:      64px;
+  --section-py: clamp(52px, 7vw, 96px);
+  --measure:    66ch;
+
+  /* -- Type --------------------------------------------------- */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+
+  /* -- Geometry: sharp is editorial. Nothing is a pill. -------- */
+  --r-xs: 2px;
+  --r-sm: 3px;
+  --r:    5px;
+
+  /* -- Motion ------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur:  220ms;
+
+  /* -- Elevation: paper has shadows, but they are quiet --------- */
+  --shadow:      0 1px 0 rgba(31, 28, 22, 0.04), 0 18px 40px -28px rgba(31, 28, 22, 0.45);
+  --shadow-lift: 0 2px 0 rgba(31, 28, 22, 0.05), 0 30px 60px -34px rgba(31, 28, 22, 0.45);
+
+  /* -- Focus -------------------------------------------------- */
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
+}
+
+/* Mode framings — data-mode lives on <html>, set per route in App.jsx.
+   Both accents are dark enough to pass 4.5:1 on --paper as text. */
+html[data-mode="web"] {
+  --accent-rgb: 194, 65, 12;
+}
+
+html[data-mode="video"] {
+  --accent-rgb: 15, 118, 110;
+}

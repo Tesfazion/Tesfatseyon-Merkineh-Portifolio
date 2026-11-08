@@ -43,12 +43,12 @@ short-form video editor based in Wolaita-Sodo, Ethiopia.
   and JSON-LD are updated on every navigation, not just the first paint.
 - **Command palette** - press `Ctrl`/`Cmd` + `K` to search every page,
   section, project, article, and social link from anywhere on the site.
-- **Dark-only design** - one tuned dark palette, deliberately. No theme
-  switcher, no localStorage, no flash of the wrong theme. Accent colour
-  follows the chosen mode.
-- **Motion that behaves** - a drag- and auto-gliding project carousel, a
-  counter-rolling tech marquee, and slow background pans, all paused or
-  removed for `prefers-reduced-motion`.
+- **Editorial light design** - warm paper, near-black ink, and one
+  saturated accent per discipline. The palette is fixed at the token
+  level: no theme switcher, no localStorage, no flash of the wrong theme.
+- **Motion that behaves** - a scroll reveal, a reading-progress rule and
+  an availability dot, nothing else. All of it collapses to static for
+  `prefers-reduced-motion`, and no content moves on its own.
 - **Downloadable resumes** - both CV PDFs are generated from the source
   `.docx` files by one script with a single shared contact block, each tinted
   with the accent of the mode it belongs to. Both preview in a focus-trapped
@@ -143,7 +143,15 @@ portfolio/
     ├── hooks.js          scroll store, media queries, focus trap, section spy
     ├── PortfolioContext.js portfolio-mode context + usePortfolio() hook
     ├── PortfolioProvider.jsx the provider component (selects the mode)
-    ├── index.css         the design system (tokens + all component styles)
+    ├── index.css         entry point: imports the layered design system
+    ├── styles/           the design system, split by responsibility
+    │   ├── tokens.css      colour, type, spacing, motion
+    │   ├── base.css        reset, typography, layout, shared controls
+    │   ├── chrome.css      navigation, footer, floating controls
+    │   ├── landing.css     the front door
+    │   ├── portfolio.css   hero, work, about, services, toolkit, contact
+    │   ├── blog.css        journal index, article, prose, code tokens
+    │   └── overlays.css    command palette, CV preview, case study
     │
     ├── assets/           resume .docx sources (not bundled; PDFs are in public/)
     │
@@ -170,11 +178,11 @@ portfolio/
     └── components/       presentational + interactive components
         ├── Navbar.jsx          progress bar, scroll-spy, focus-trapped drawer
         ├── Footer.jsx
-        ├── Hero.jsx            typewriter roles, count-up stats, CTA
+        ├── Hero.jsx            display claim, discipline index, stat strip
         ├── About.jsx           bio, facts, picture chain, section CTA
         ├── Services.jsx        per-mode service cards
-        ├── TechStack.jsx       brand-icon badges + capability groups
-        ├── Projects.jsx        filterable rail + drag + auto-glide
+        ├── TechStack.jsx       ruled toolkit index + capability groups
+        ├── Projects.jsx        filterable work grid + case-study dialog
         ├── ProjectModal.jsx    full case-study dialog
         ├── Resume.jsx          credential strip + CV entry point
         ├── Contact.jsx         contact channels + validated email-composing form
@@ -222,13 +230,15 @@ developer accent rather than rendering in monochrome.
 
 ### Syntax highlighting
 
-`src/lib/blog.js` emits `<span class="tok-key">` and friends; `src/index.css`
-styles `.tok-key`, `.tok-str`, `.tok-num`, `.tok-com`, and `.tok-fn`. Those
+`src/lib/blog.js` emits `<span class="tok-key">` and friends; the stylesheets
+in `src/styles/` style `.tok-key`, `.tok-str`, `.tok-num`, `.tok-com`, and
+`.tok-fn`. Those
 two lists are a contract, and they were once out of sync — the renderer emitted
 `tok-keyword` / `tok-string` / `tok-number` / `tok-comment` while the
 stylesheet defined the short forms, so every token fell through to the plain
 `<pre>` colour and all code blocks looked flat. `npm run check:tokens` (wired
-into `npm run build`) now fails the build if that ever happens again.
+into `npm run build`) reads every file under `src/styles/` and fails the build
+if the two ever drift apart again.
 
 ### Why the case studies are split out
 
@@ -294,11 +304,13 @@ of the index, the archive, the feeds, and the palette.
 
 ### Theme
 
-The site is dark-only by design. There is no theme toggle, no `localStorage`
-read, and no pre-paint theme script - the palette is fixed at the token level
-in `index.css`, so the first paint is already correct and there is no flash of
-the wrong theme. The only theming that changes is the per-mode accent, set
-from the route in `App.jsx`.
+The site is light-only by design: warm paper (`#f3f0e7`), near-black ink and
+one saturated accent per discipline. There is no theme toggle, no
+`localStorage` read, and no pre-paint theme script - the palette is fixed at
+the token level in `src/styles/tokens.css`, so the first paint is already
+correct and there is no flash of the wrong theme. The only theming that changes
+is the per-mode accent, set from the route in `App.jsx` and consumed through a
+single RGB triple (`--accent-rgb`) that every tint derives from.
 
 ## Editing content
 
@@ -309,6 +321,7 @@ touch a component.
 | Object             | Purpose                                             |
 |--------------------|-----------------------------------------------------|
 | `profile`          | name, contact details, photo, availability          |
+| `company`          | the studio — name, role, services, locales, contact  |
 | `socials`          | social profile URLs                                  |
 | `navLinks`         | navbar and footer links                              |
 | `routeLinks`       | routes shown in the navbar                           |
@@ -316,6 +329,21 @@ touch a component.
 | `modes.web`        | the entire web-developer page (bio, roles, stats,    |
 |                    | skills, services, projects, resume, SEO)             |
 | `modes.video`      | the entire video-editor page                         |
+
+**The studio.** `company` is Tesfatseyon's company, Sunshine Tech Solution. Every
+value in it — the five service lines, the six locales, the address, the contact
+address — is taken from the company's own repository
+(`src/data/site.ts` and `src/i18n.tsx`), not invented. It surfaces in four
+places from that one object: the studio band on the landing page, the Studio
+row in About, the Studio column in the footer, and `worksFor` in the Person
+JSON-LD (both the runtime schema built by `src/lib/schema.js` and the static
+block in `index.html`). Change the object and all four follow.
+
+The studio's own site is also the **first project** on `/web` — it is the one
+case that demonstrates the whole stack the services claim, end to end. Its
+case study is sourced from the same repository: React + TypeScript + Vite +
+Tailwind, six locales with Arabic RTL, and a build that typechecks before it
+bundles.
 
 **Adding a project** is two objects - a card in `config.js` and a case study
 in `src/content/case-studies.js`, joined by the `study` id:
@@ -474,8 +502,9 @@ GitHub Pages does not support rewrites. Switch `BrowserRouter` to
   chunks, so a content-only redeploy does not invalidate the cached vendor
   bundle.
 - **Image tiers** - the profile photo ships as WebP (15 kB) with a JPEG
-  fallback; the source PNG is kept out of the repo. Icons are inline SVG, and
-  the 18 brand icons load lazily from the Simple Icons CDN with a `preconnect`.
+  fallback; the source PNG is kept out of the repo. Every interface icon is an
+  inline SVG in `Icon.jsx`, so the toolkit grid and the social rows cost no
+  extra requests.
 - **Security headers** - `vercel.json` sends a strict Content Security Policy
   (self-only scripts, no frames, `upgrade-insecure-requests`), plus `nosniff`,
   `Referrer-Policy: strict-origin-when-cross-origin`, a restrictive

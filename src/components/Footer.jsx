@@ -3,13 +3,17 @@
  * socials — then a bottom rule with copyright and back-to-top.
  */
 import { Link } from "react-router-dom";
-import { navLinks, modesList, profile, socials, SOCIAL_KEYS, site } from "../config";
-import { usePrefersReducedMotion } from "../hooks";
+import { navLinks, modesList, profile, socials, SOCIAL_KEYS, site, company } from "../config";
+import { usePrefersReducedMotion, useSectionNav } from "../hooks";
 import Icon from "./Icon";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const reduced = usePrefersReducedMotion();
+  /* Footer section links are reachable from /blog, where the sections do not
+     exist yet — goTo routes to the portfolio first, then scrolls once the
+     lazy chunk has mounted. */
+  const goTo = useSectionNav();
 
   return (
     <footer className="footer">
@@ -29,6 +33,9 @@ export default function Footer() {
             <div className="footer-links">
               <Link to="/">Home</Link>
               <Link to="/blog">Blog</Link>
+              <a href={company.url} target="_blank" rel="noopener noreferrer">
+                {company.name}
+              </a>
               <a href={socials.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
               <a href={`mailto:${profile.email}`}>Email</a>
             </div>
@@ -43,7 +50,7 @@ export default function Footer() {
                 <button
                   key={l.id}
                   type="button"
-                  onClick={() => scrollToId(l.id)}
+                  onClick={() => goTo(l.id)}
                 >
                   {l.label}
                 </button>
@@ -59,6 +66,17 @@ export default function Footer() {
               ))}
               <a href={`mailto:${profile.email}`}>Contact</a>
             </nav>
+          </div>
+
+          <div>
+            <h4>Studio</h4>
+            <div className="footer-nav">
+              <a href={company.url} target="_blank" rel="noopener noreferrer">
+                {company.name}
+              </a>
+              <a href={`mailto:${company.email}`}>{company.email}</a>
+              <span className="footer-location">{company.location}</span>
+            </div>
           </div>
 
           <div>

@@ -10,13 +10,24 @@
  *
  * Usage:  node tools/check_tokens.mjs
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const blog = readFileSync(join(ROOT, "src", "lib", "blog.js"), "utf8");
-const css = readFileSync(join(ROOT, "src", "index.css"), "utf8");
+
+/* The stylesheet is layered (src/styles/*.css imported by index.css), so
+   the token rules may live in any layer. Read the whole design system
+   rather than one file — otherwise splitting the CSS would silently pass
+   this guard while the tokens were unstyled. */
+const STYLE_DIR = join(ROOT, "src", "styles");
+const css = [
+  readFileSync(join(ROOT, "src", "index.css"), "utf8"),
+  ...readdirSync(STYLE_DIR)
+    .filter((f) => f.endsWith(".css"))
+    .map((f) => readFileSync(join(STYLE_DIR, f), "utf8")),
+].join("\n");
 
 /* Every entry in the highlighter's pattern list is ["type", <regex|ref>],
    whatever the second element happens to be. */

@@ -5,11 +5,11 @@
 
 export const site = {
   url:         "https://tesfatseyon.dev",
-  themeColor:  "#0a0a0b",
+  themeColor:  "#fbfaf6",
   seo: {
-    title: "Tesfatseyon Merkinh — Full-Stack Developer & Video Editor",
+    title: "Tesfatseyon Merkinh — Founder & CEO, Sunshine Tech Solution",
     description:
-      "Tesfatseyon Merkinh — full-stack web developer and short-form video editor based in Ethiopia. I build fast, modern websites and edit scroll-stopping short-form video.",
+      "Tesfatseyon Merkinh is the founder and CEO of Sunshine Tech Solution, a studio in Addis Abeba building web products, software and security work — and a full-stack developer and short-form video editor in his own right.",
   },
 };
 
@@ -20,7 +20,10 @@ export const profile = {
   brand:        "Tesfatseyon",
   initials:     "TM",
   photo:        "/me.jpg",
-  role:         "Full-Stack Developer & Video Editor",
+  /* The founder title leads: it is the professional identity now, and the
+     two crafts sit underneath it rather than competing with it. */
+  role:         "Founder & CEO, Sunshine Tech Solution",
+  disciplines:  "Full-stack developer & short-form video editor",
   location:     "Wolaita-Sodo, South Ethiopia",
   email:        "tesfatseyon16@gmail.com",
   phone:        "+251983708869",
@@ -41,14 +44,42 @@ export const socials = {
 
 export const SOCIAL_KEYS = ["telegram", "linkedin", "github", "instagram", "x"];
 
+// ── Company ───────────────────────────────────────────────
+// Tesfatseyon's studio. Every value here comes from the company's own
+// repository (src/data/site.ts and src/i18n.tsx), not from guesswork — the
+// site's whole argument is that a claim should be checkable.
+export const company = {
+  name:      "Sunshine Tech Solution",
+  legalName: "Ethio-Sunshine Tech Solution",
+  role:      "Founder & CEO",
+  tagline:   "Modern web, software & security services",
+  url:       "https://sunshinetechsolution.vercel.app",
+  github:    "https://github.com/Tesfazion/Ethio-Sunshine-Tech-Solution",
+  email:     "sunshinetechsolution4@gmail.com",
+  location:  "Addis Abeba, Ethiopia",
+  /* The five service lines the company actually publishes. */
+  services: [
+    "Web design & UI engineering",
+    "Software development",
+    "IT infrastructure",
+    "IoT & smart systems",
+    "Cybersecurity",
+  ],
+  /* Locale codes defined in src/i18n.tsx. Arabic is the RTL one. */
+  locales: ["English", "አማርኛ", "Afaan Oromoo", "Français", "Español", "العربية"],
+};
+
 // ── Nav ────────────────────────────────────────────────────
 // Section links scroll within a portfolio page.
 // Route links navigate to standalone pages (landing + blog).
+/* Work first: a visitor scanning this page is looking for evidence before
+   biography. The order here drives the navbar and the command palette, and
+   matches the section order in PortfolioPage. */
 export const navLinks = [
-  { label: "About",    id: "about"    },
-  { label: "Skills",   id: "skills"   },
-  { label: "Services", id: "services" },
   { label: "Work",     id: "work"     },
+  { label: "About",    id: "about"    },
+  { label: "Services", id: "services" },
+  { label: "Skills",   id: "skills"   },
   { label: "Résumé",   id: "resume"   },
   { label: "Contact",  id: "contact"  },
 ];
@@ -70,7 +101,7 @@ export const modes = {
     shortLabel: "Web Development",
     route:      "/web",
     icon:       "code",
-    accent:     "255, 77, 0",
+    accent:     "194, 65, 12",
     resumeUrl:  "/CV-Tesfatseyon-Web-Developer.pdf",
     resumeName: "CV-Tesfatseyon-Web-Developer.pdf",
     seo: {
@@ -88,6 +119,7 @@ export const modes = {
     shortBio:   "Full-stack developer turning ideas into clean, high-performance products.",
     about: [
       "I'm a freelance full-stack web developer and Video Editor with hands-on experience building responsive websites, AI-powered applications, and scalable project structures. Skilled in React, Next.js, Python, and modern UI/UX design.",
+      "I also founded and run Sunshine Tech Solution, a studio in Addis Abeba delivering web, software and security work — so a client project gets a team behind it, not just one pair of hands.",
       "I focus on clean modular code and professional branding — making sure every project is fast, maintainable, and built to grow. I work in the open: every project below links to real code on GitHub.",
     ],
     highlights: [
@@ -175,6 +207,19 @@ export const modes = {
     workNote: "A curated selection of work I'm proud of. Every project below links to real code on GitHub — no mockups, no stock screenshots.",
     projects: [
       {
+        /* The studio's own site leads the work list: it is the one project
+           that demonstrates the whole stack the services claim, end to end. */
+        category: "Websites",
+        title:    "Sunshine Tech Solution",
+        desc:     "My studio's own site — React, TypeScript and Vite across six languages including Arabic RTL, with the content typed so a bad copy edit fails the build instead of the page.",
+        tags:     ["React", "TypeScript", "Vite", "i18n"],
+        gradient: ["#f59e0b", "#ef4444"],
+        accent:   "#f59e0b",
+        link:     "https://sunshinetechsolution.vercel.app",
+        github:   "https://github.com/Tesfazion/Ethio-Sunshine-Tech-Solution",
+        study:    "ethio-sunshine-tech-solution",
+      },
+      {
         category: "AI & SaaS",
         title:    "AI for FOREX Analyzing",
         desc:     "Turns raw market data into readable trend signals — a Python pipeline that fetches, cleans, models, and visualises FX movement for trading decisions.",
@@ -242,17 +287,6 @@ export const modes = {
       },
       {
         category: "Websites",
-        title:    "Ethio-Sunshine Tech Solution",
-        desc:     "A corporate site that positions the company for growth — modern, typed with TypeScript and Next.js, deployed on Vercel.",
-        tags:     ["TypeScript", "Next.js", "Vercel"],
-        gradient: ["#f59e0b", "#ef4444"],
-        accent:   "#f59e0b",
-        link:     "https://sunshinetechsolution.vercel.app",
-        github:   "https://github.com/Tesfazion/Ethio-Sunshine-Tech-Solution",
-        study:    "ethio-sunshine-tech-solution",
-      },
-      {
-        category: "Websites",
         title:    "Abol Garden Café",
         desc:     "A café site built to earn reservations — warm on-brand design with menu, gallery, and a simple booking path.",
         tags:     ["TypeScript", "Full-Stack", "UI Design"],
@@ -315,7 +349,7 @@ export const modes = {
     shortLabel: "Video Editing",
     route:      "/video",
     icon:       "video",
-    accent:     "0, 211, 167",
+    accent:     "15, 118, 110",
     resumeUrl:  "/CV_Tesfatseyon_VideoEditor.pdf",
     resumeName: "CV_Tesfatseyon_VideoEditor.pdf",
     seo: {
@@ -481,3 +515,26 @@ export const modes = {
 };
 
 export const modesList = [modes.web, modes.video];
+
+/* ── Cover art ────────────────────────────────────────────────
+   Keyed by project category, not by project: the web covers are
+   abstract riso-print compositions and the video covers are
+   photographs, chosen to match the medium each discipline works in.
+
+   These are DECORATION, not screenshots. No cover is presented as a
+   picture of the product, and no cover carries invented UI — the
+   site's claim is that the work is checkable, so a fake dashboard
+   behind a project card would undo the whole argument. A project can
+   override its category cover with its own `cover` field. */
+export const projectCovers = {
+  "AI & SaaS":  "/work/ai-saas.jpg",
+  "Full-Stack": "/work/fullstack.jpg",
+  "Websites":   "/work/websites.jpg",
+  "Shorts":     "/work/shorts.jpg",
+  "Reels":      "/work/reels.jpg",
+  "Grading":    "/work/grading.jpg",
+};
+
+/** The cover for a project: its own field first, then its category. */
+export const coverFor = (project) =>
+  project?.cover || projectCovers[project?.category] || null;

@@ -1,39 +1,30 @@
 /**
- * Hero — wide editorial: oversized serif title, typed role line, and
- * a "types" switcher panel (Web / Video) on the right in place of a
- * photo, plus a rule-separated stat strip. Colour is driven entirely
- * by the mode accent (data-mode on <html>).
+ * Hero — the opening spread of a discipline page.
+ *
+ * Left: the claim (display serif) and the two things a visitor can do.
+ * Right: the Web / Video index, so switching discipline never means a
+ * trip back to the landing page. Below: the numbers, in a ruled strip.
+ *
+ * The typed role line and the count-up stats are gone on purpose: motion
+ * for its own sake competes with the work, and a static number is not
+ * less convincing than one that counts itself up.
  */
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { profile, socials, SOCIAL_KEYS, modesList } from "../config";
-import { useCountUp, useTypewriter, scrollToId } from "../hooks";
+import { scrollToId } from "../hooks";
 import { usePortfolio } from "../PortfolioContext.js";
 import Icon from "./Icon";
-import CvModal from "./CvModal";
-
-function Stat({ stat }) {
-  const [value, ref] = useCountUp(stat.value);
-  return (
-    <div className="stat" ref={ref}>
-      <span className="stat-value">{value}{stat.suffix}</span>
-      <span className="stat-label">{stat.label}</span>
-    </div>
-  );
-}
 
 export default function Hero() {
-  const mode     = usePortfolio();
-  const typed    = useTypewriter(mode.roles);
-  const [cvOpen, setCvOpen] = useState(false);
+  const mode = usePortfolio();
 
   return (
     <section id="home" className="hero" aria-label="Introduction">
-      {/* ── Copy ── */}
+      {/* ── Claim ── */}
       <div className="hero-copy">
         <div className="hero-badge">
           <span className="hero-badge-dot" aria-hidden="true" />
-          {profile.availability}
+          {profile.role}
         </div>
 
         <h1 className="hero-title">
@@ -42,37 +33,24 @@ export default function Hero() {
           <em>{mode.heroTitle.emph}</em>
         </h1>
 
-        <div className="hero-role-line">
-          <span className="hero-role-prefix">I do</span>
-          <span className="hero-typed-text">{typed}</span>
-          <span className="hero-caret" aria-hidden="true" />
-        </div>
-
         <p className="hero-sub">{mode.tagline}</p>
 
         <div className="hero-actions">
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-primary btn-lg"
             onClick={() => scrollToId("work")}
           >
-            View My Work <Icon name="arrowRight" size={16} />
+            View the work <Icon name="arrowDown" size={15} />
           </button>
           <a
             href={socials.telegram}
             target="_blank"
             rel="noreferrer"
-            className="btn btn-ghost"
+            className="btn btn-ghost btn-lg"
           >
-            <Icon name="telegram" size={16} /> Let's Talk
+            <Icon name="telegram" size={15} /> Let&apos;s talk
           </a>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => setCvOpen(true)}
-          >
-            <Icon name="eye" size={16} /> View CV
-          </button>
         </div>
 
         <div className="hero-socials">
@@ -84,46 +62,44 @@ export default function Hero() {
               rel="noreferrer me"
               aria-label={key}
             >
-              <Icon name={key} size={16} />
+              <Icon name={key} size={15} />
             </a>
           ))}
         </div>
       </div>
 
-      {/* ── Types panel: Web / Video switcher ── */}
-      <div className="hero-types" aria-label="Choose what I do">
-        <span className="hero-types-kicker">Two types of work</span>
+      {/* ── Discipline index ── */}
+      <aside className="hero-types" aria-label="The two disciplines">
+        <span className="hero-types-kicker">Two disciplines</span>
         {modesList.map((m) => (
           <Link
             key={m.key}
             to={m.route}
             className="hero-type"
             style={{ "--type-accent": `rgb(${m.accent})` }}
+            aria-current={m.key === mode.key ? "page" : undefined}
           >
             <span className="hero-type-icon" aria-hidden="true">
-              <Icon name={m.icon} size={20} />
+              <Icon name={m.icon} size={17} />
             </span>
             <span className="hero-type-body">
               <strong>{m.label}</strong>
               <span>{m.chips.slice(0, 2).join(" · ")}</span>
             </span>
-            <Icon name="arrowRight" size={16} className="hero-type-arrow" />
+            <Icon name="arrowRight" size={15} className="hero-type-arrow" />
           </Link>
         ))}
-      </div>
+      </aside>
 
-      {/* ── Stats ── */}
+      {/* ── Numbers ── */}
       <div className="hero-stats-bar">
-        {mode.stats.map((s) => <Stat key={s.label} stat={s} />)}
+        {mode.stats.map((s) => (
+          <div className="stat" key={s.label}>
+            <span className="stat-value">{s.value}{s.suffix}</span>
+            <span className="stat-label">{s.label}</span>
+          </div>
+        ))}
       </div>
-
-      {cvOpen && (
-        <CvModal
-          url={mode.resumeUrl}
-          name={mode.resumeName}
-          onClose={() => setCvOpen(false)}
-        />
-      )}
     </section>
   );
 }

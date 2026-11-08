@@ -6,7 +6,7 @@
  * the schema from config also means the structured data can never drift
  * from the visible content the way a hand-written index.html block does.
  */
-import { site } from "../config";
+import { site, company } from "../config";
 
 export function personSchema(profile, socials) {
   return {
@@ -22,6 +22,19 @@ export function personSchema(profile, socials) {
       "@type": "PostalAddress",
       addressLocality: profile.location,
       addressCountry: "ET",
+    },
+    /* The studio is part of the professional identity, so it belongs in the
+       schema rather than only in the copy. */
+    worksFor: {
+      "@type": "Organization",
+      name: company.name,
+      url: company.url,
+      email: `mailto:${company.email}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: company.location,
+        addressCountry: "ET",
+      },
     },
     alumniOf: {
       "@type": "CollegeOrUniversity",

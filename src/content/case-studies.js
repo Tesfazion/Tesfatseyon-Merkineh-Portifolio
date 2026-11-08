@@ -106,19 +106,26 @@ export const caseStudies = {
     learned:  "Modelling the record correctly mattered more than any screen. I would design the schema with whoever works at reception, because they know where the duplicate entry actually happens.",
   },
 
-  /* Ethio-Sunshine Tech Solution */
+  /* Sunshine Tech Solution — the studio's own site.
+     Every claim below is verifiable in the public repository: the stack is
+     React + TypeScript + Vite + Tailwind, the six locales and the Arabic RTL
+     direction are declared in src/i18n.tsx, and `npm run build` typechecks
+     before it bundles. The previous version of this entry said Next.js,
+     which the codebase has never used. */
   "ethio-sunshine-tech-solution": {
-    role:     "Frontend developer — TypeScript implementation, Next.js build, and Vercel deployment.",
-    problem:  "A growing company was presenting itself with a site that undersold it. The services were there, but a prospective client had no clear read on what the company did or why it was credible.",
-    approach:  "Rebuild on Next.js with TypeScript so the service definitions are typed and a content change cannot silently break a page, then restructure the narrative around what the company does and the results it delivers, and deploy through Vercel for instant rollbacks.",
-    outcome:  "A live corporate site that positions the company clearly and ships from a typed, deploy-on-push pipeline — the codebase is as much of an upgrade as the design.",
+    role:     "Founder — product direction, design system, front-end engineering, and deployment.",
+    problem:  "Sunshine Tech Solution sells web, software, infrastructure, IoT and security work, but the site has to do that selling to two audiences at once: Ethiopian clients, and international ones who will not read English-only copy. A single-language marketing page quietly disqualifies half the market before anyone reads the services list.",
+    approach:  "Built the site in React, TypeScript, Vite and Tailwind, then treated language as a first-class feature rather than a later bolt-on: one message table keyed by locale, a language switcher in the header, and Arabic served right-to-left so the layout mirrors instead of just translating. Company details and projects live in typed data modules (`src/data/site.ts`, `src/data/projects.ts`), so a content edit is checked by the compiler, and `npm run build` typechecks before it bundles.",
+    outcome:  "A live site that presents the same company to six audiences — English, አማርኛ, Afaan Oromoo, Français, Español and العربية — from one codebase, with typed content and documented setup so another engineer can pick it up without being walked through it.",
     highlights: [
-      "Rebuilt on Next.js with TypeScript across the service layer",
-      "Restructured the narrative around services and delivered results",
-      "Deployed on Vercel with instant preview URLs per branch",
-      "Typed content models so copy edits fail loudly, not silently",
+      "Six locales behind one switcher, with Arabic rendered right-to-left",
+      "React + TypeScript + Vite + Tailwind — typed end to end",
+      "Typed content modules, so a bad copy edit fails the build, not the page",
+      "Typecheck wired into the build; Vercel previews on every push",
+      "Repo carries its own docs (quick start, contributing, technical reference), CI, and a code of conduct",
+      "Five service lines — web, software, infrastructure, IoT, security — under one narrative",
     ],
-    learned:  "Writing the content types first made the page components much simpler. I would also set up preview deployments earlier so the client could review copy changes directly.",
+    learned:  "Translating the marketing copy was the easy half; the layout had to be built for mirroring from the start, and retrofitting RTL afterwards would have cost far more. Next time I would design one screen in Arabic before the other five.",
   },
 
   /* Abol Garden Café */

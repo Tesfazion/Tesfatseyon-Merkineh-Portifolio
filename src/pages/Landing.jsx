@@ -1,10 +1,15 @@
 /**
- * Landing — the front door. Two modes, honest framing, a real process.
- * The old "trusted by" logo wall is gone: it implied clients we don't
- * have, and a portfolio that leads with claims invites the wrong call.
+ * Landing — the front door.
+ *
+ * The page is laid out like a printed index: a claim, the two
+ * disciplines, a sample of real work, the process, and straight answers.
+ * There is no logo wall, no invented metric and no self-playing carousel —
+ * on a portfolio, the work is the argument.
  */
 import { Link } from "react-router-dom";
-import { profile, socials, modesList, SOCIAL_KEYS, site, modes } from "../config";
+import {
+  profile, socials, modesList, SOCIAL_KEYS, site, modes, company, coverFor,
+} from "../config";
 import { scrollToId } from "../hooks";
 import Seo from "../components/Seo";
 import { personSchema } from "../lib/schema";
@@ -17,9 +22,9 @@ import Testimonials from "../components/Testimonials";
 
 const NAV_ITEMS = [
   { label: "Services", id: "services" },
+  { label: "Work",     id: "work"     },
   { label: "Process",  id: "process"  },
   { label: "FAQ",      id: "faq"      },
-  { label: "Contact",  id: "contact"  },
 ];
 
 const PROCESS = [
@@ -60,23 +65,35 @@ const FAQ = [
   },
 ];
 
-const MARQUEE = [
-  "Web Development", "Short-Form Video", "React", "CapCut",
-  "UI Design", "Color Grading", "Next.js", "Retention Editing",
-  "SEO", "DaVinci Resolve",
-];
-
 const TOOLS = [
   "React", "Next.js", "TypeScript", "Tailwind", "Node.js",
   "Python", "CapCut", "DaVinci Resolve", "Figma", "Supabase",
 ];
 
 const LANDING_STATS = [
-  { value: 1,  suffix: "+", label: "Years Building"  },
-  { value: 11, suffix: "+", label: "Projects Shipped" },
-  { value: 5,  suffix: "+", label: "Happy Clients"    },
-  { value: 7,  suffix: "",  label: "Core Technologies" },
+  { value: 1,  suffix: "+", label: "Years building"   },
+  { value: 11, suffix: "+", label: "Projects shipped" },
+  { value: 5,  suffix: "+", label: "Happy clients"    },
+  { value: 7,  suffix: "",  label: "Core technologies"},
 ];
+
+/* One sample from each discipline, interleaved — the point of this list is
+   that the same person made all six. Looked up by `study` id rather than by
+   array position, so reordering a mode's projects cannot silently swap one
+   of these for something unrelated. */
+const SELECTED_STUDIES = [
+  ["ethio-sunshine-tech-solution", modes.web],
+  ["shorts-batch-hooks-captions-b-roll", modes.video],
+  ["leadforge-ai", modes.web],
+  ["cinematic-travel-cut-graded-for-reels", modes.video],
+  ["wolaita-sodo-water-monitor", modes.web],
+  ["launch-promo-45s", modes.video],
+];
+
+const SELECTED = SELECTED_STUDIES.map(([study, mode]) => ({
+  mode,
+  project: mode.projects.find((p) => p.study === study),
+})).filter(({ project }) => Boolean(project));
 
 export default function Landing() {
   return (
@@ -102,9 +119,7 @@ export default function Landing() {
                 {item.label}
               </button>
             ))}
-            <Link to="/blog" style={{ padding: "7px 13px", fontSize: "0.86rem", color: "var(--ink-2)" }}>
-              Blog
-            </Link>
+            <Link to="/blog">Journal</Link>
             <PaletteTrigger />
           </nav>
 
@@ -112,10 +127,10 @@ export default function Landing() {
             href={socials.telegram}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary"
+            className="btn btn-primary btn-sm"
           >
-            <Icon name="telegram" size={15} />
-            Hire Me
+            <Icon name="telegram" size={13} />
+            Hire me
           </a>
         </header>
 
@@ -123,8 +138,8 @@ export default function Landing() {
         <section className="landing-hero">
           <div className="landing-hero-copy">
             <div className="landing-kicker-line">
-              <span className="landing-kicker-dot" aria-hidden="true">●</span>
-              Web &amp; short-form video
+              <span className="landing-kicker-dot" aria-hidden="true" />
+              {profile.role}
             </div>
 
             <h1 className="landing-title">
@@ -133,8 +148,10 @@ export default function Landing() {
             </h1>
 
             <p className="landing-sub">
-              Modern websites that convert visitors into customers — and
-              short-form videos people actually watch to the very end.
+              I&apos;m {profile.firstName} — founder and CEO of {company.name}.
+              Modern websites that turn visitors into customers, and
+              short-form video people watch to the last second. One studio,
+              two disciplines, no hand-offs.
             </p>
 
             <div className="landing-hero-actions">
@@ -143,7 +160,7 @@ export default function Landing() {
                 className="btn btn-primary btn-lg"
                 onClick={() => scrollToId("services")}
               >
-                See what I do <Icon name="arrowDown" size={16} />
+                Choose a direction <Icon name="arrowDown" size={15} />
               </button>
               <a
                 href={socials.telegram}
@@ -151,7 +168,7 @@ export default function Landing() {
                 rel="noreferrer"
                 className="btn btn-ghost btn-lg"
               >
-                <Icon name="telegram" size={16} /> Let's Talk
+                <Icon name="telegram" size={15} /> Let&apos;s talk
               </a>
             </div>
 
@@ -166,16 +183,35 @@ export default function Landing() {
                     rel="noreferrer me"
                     aria-label={key}
                   >
-                    <Icon name={key} size={16} />
+                    <Icon name={key} size={15} />
                   </a>
                 ))}
               </div>
             </div>
           </div>
+
+          <figure className="landing-portrait">
+            <picture>
+              <source srcSet="/me.webp" type="image/webp" />
+              <img
+                src="/me.jpg"
+                alt={`${profile.name}, ${profile.role}`}
+                width="600"
+                height="600"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
+            <figcaption>
+              <span>{profile.location}</span>
+              <span>{profile.initials} / 2026</span>
+            </figcaption>
+            <span className="landing-portrait-role">{profile.disciplines}</span>
+          </figure>
         </section>
 
-        {/* ── Stats — social proof strip ────────────── */}
-        <div className="landing-stats" aria-label="Stats">
+        {/* ── Numbers ────────────────────────────────── */}
+        <div className="landing-stats" aria-label="At a glance">
           {LANDING_STATS.map((s) => (
             <div key={s.label} className="stat-item">
               <div className="stat-value">{s.value}{s.suffix}</div>
@@ -183,31 +219,17 @@ export default function Landing() {
             </div>
           ))}
         </div>
-      </div>
 
-      {/* ── Marquee — the continuous hook ribbon ── */}
-      <div className="marquee" aria-hidden="true">
-        <div className="marquee-track">
-          {[...MARQUEE, ...MARQUEE].map((word, i) => (
-            <span key={i} className={`marquee-word${i % 2 ? " marquee-word--alt" : ""}`}>
-              {word}
-              <Icon name="sparkle" size={14} />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="landing-inner">
-        {/* ── Service Cards — choose a direction ── */}
+        {/* ── Disciplines ────────────────────────────── */}
         <section id="services" className="landing-pick">
           <Reveal className="sec-head">
-            <span className="kicker"><i>01</i> What do you need?</span>
+            <span className="kicker"><i>01</i> What I do</span>
             <h2 className="sec-title">
               Choose a <em>direction</em>
             </h2>
             <p className="sec-sub">
-              Two specialisations, one person. Pick the one that matches
-              your project — or bring both.
+              Two specialisations, one person. Pick the one that matches your
+              project — or bring both.
             </p>
           </Reveal>
 
@@ -220,8 +242,9 @@ export default function Landing() {
                   className="landing-card"
                   style={{ "--acc": `rgb(${mode.accent})` }}
                 >
+                  <span className="landing-card-num">0{i + 1}</span>
                   <span className="landing-card-icon">
-                    <Icon name={mode.icon} size={20} />
+                    <Icon name={mode.icon} size={19} />
                   </span>
                   <h3>{mode.label}</h3>
                   <p>{mode.tagline}</p>
@@ -230,7 +253,7 @@ export default function Landing() {
                   </div>
                   <span className="landing-card-btn">
                     Explore {mode.shortLabel}
-                    <Icon name="arrowRight" size={16} />
+                    <Icon name="arrowRight" size={15} />
                   </span>
                 </Link>
               </Reveal>
@@ -238,18 +261,112 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ── Process — honest replacement for logo walls ── */}
+        {/* ── The studio ────────────────────────────── */}
+        <section className="studio-band" aria-labelledby="studio-title">
+          <div className="studio-band-copy">
+            <span className="kicker"><i>Studio</i> Where the work happens</span>
+            <h2 id="studio-title">
+              I run <em>{company.name}</em>
+            </h2>
+            <p>
+              {company.tagline} — {company.location}. Client projects get a
+              team behind them, not just one pair of hands.
+            </p>
+            <a
+              className="text-link"
+              href={company.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit the studio <Icon name="arrowUpRight" size={13} />
+            </a>
+          </div>
+
+          <ul className="studio-services" aria-label="What the studio does">
+            {company.services.map((service, i) => (
+              <li key={service}>
+                <span>{String(i + 1).padStart(2, "0")}</span>
+                {service}
+              </li>
+            ))}
+          </ul>
+
+          <figure className="studio-photo">
+            <img
+              src="/studio-addis.jpg"
+              alt="Addis Abeba skyline"
+              width="800"
+              height="1000"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <span>{company.location}</span>
+              <span>Est. {company.name}</span>
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* ── Selected work ──────────────────────────── */}
+        <section id="work" className="landing-pick">
+          <Reveal className="sec-head">
+            <span className="kicker"><i>02</i> Selected work</span>
+            <h2 className="sec-title">
+              Recent <em>proof</em>
+            </h2>
+            <p className="sec-sub">
+              Three projects from each discipline. Every one opens into a
+              written case study — the problem, the approach, and what it did.
+            </p>
+          </Reveal>
+
+          <div className="landing-work">
+            {SELECTED.map(({ project, mode }, i) => {
+              const thumb = coverFor(project);
+              return (
+              <Link
+                key={`${mode.key}-${project.title}`}
+                to={mode.route}
+                className="landing-work-row"
+              >
+                <span className="landing-work-num">{String(i + 1).padStart(2, "0")}</span>
+                {thumb && (
+                  <img
+                    className="landing-work-thumb"
+                    src={thumb}
+                    alt=""
+                    width="1120"
+                    height="632"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <span className="landing-work-title">{project.title}</span>
+                <span className="landing-work-tags">{project.tags.slice(0, 3).join(" · ")}</span>
+                <span className="landing-work-mode">{mode.label}</span>
+                <Icon name="arrowUpRight" size={16} className="landing-work-arrow" />
+              </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── Process ────────────────────────────────── */}
         <section id="process" className="landing-pick">
           <Reveal className="sec-head">
-            <span className="kicker"><i>02</i> How I work</span>
+            <span className="kicker"><i>03</i> How I work</span>
             <h2 className="sec-title">
               Built to <em>deliver</em>
             </h2>
+            <p className="sec-sub">
+              Three steps, the same on every project — so you always know
+              where things stand and what happens next.
+            </p>
           </Reveal>
 
           <div className="process-grid">
             {PROCESS.map((step, i) => (
-              <Reveal key={step.title} delay={i * 70} className="card process-step">
+              <Reveal key={step.title} delay={i * 70} className="process-step">
                 <span className="process-num">0{i + 1}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
@@ -258,45 +375,33 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ── Tools — stack I work with ─────────────── */}
+        {/* ── Tools ──────────────────────────────────── */}
         <div className="logo-strip" aria-label="Tools and technologies">
           {TOOLS.map((tool) => (
             <span key={tool} className="logo-chip">{tool}</span>
           ))}
         </div>
 
-        {/* ── Blog teaser ──────────────────────────── */}
-        <section style={{ paddingBottom: "clamp(40px, 6vw, 64px)" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 20,
-              flexWrap: "wrap",
-              borderTop: "1px solid var(--hairline)",
-              paddingTop: 28,
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: "1.3rem", marginBottom: 6 }}>Notes on building &amp; editing</h3>
-              <p style={{ color: "var(--ink-2)", fontSize: "0.9rem" }}>
-                Essays on React structure, retention editing, and honest craft.
-              </p>
-            </div>
-            <Link to="/blog" className="btn btn-ghost">
-              Read the blog <Icon name="arrowRight" size={15} />
-            </Link>
+        {/* ── Journal teaser ─────────────────────────── */}
+        <section className="landing-blog">
+          <div>
+            <h3>Notes on building &amp; editing</h3>
+            <p>
+              Essays on React structure, retention editing, and honest craft.
+            </p>
           </div>
+          <Link to="/blog" className="btn btn-ghost">
+            Read the journal <Icon name="arrowRight" size={14} />
+          </Link>
         </section>
 
-        {/* ── Testimonials — client quotes ──────────── */}
+        {/* ── Words from clients ─────────────────────── */}
         <Testimonials />
 
-        {/* ── FAQ — straight answers, no pressure ─── */}
+        {/* ── FAQ ────────────────────────────────────── */}
         <section id="faq" className="landing-pick">
           <Reveal className="sec-head">
-            <span className="kicker"><i>03</i> Common questions</span>
+            <span className="kicker"><i>05</i> Common questions</span>
             <h2 className="sec-title">
               Asked <em>often</em>
             </h2>
@@ -313,7 +418,7 @@ export default function Landing() {
                   <details key={f.q} className="faq-item">
                     <summary>
                       <span>{f.q}</span>
-                      <Icon name="chevronRight" size={16} className="faq-chevron" />
+                      <Icon name="chevronRight" size={15} className="faq-chevron" />
                     </summary>
                     <p>{f.a}</p>
                   </details>
@@ -323,56 +428,54 @@ export default function Landing() {
 
             <Reveal delay={100} className="faq-aside">
               <span className="landing-card-icon" aria-hidden="true">
-                <Icon name="send" size={20} />
+                <Icon name="send" size={19} />
               </span>
               <h3>Still have questions?</h3>
               <p>
                 Message me on Telegram or email — I tend to reply within a
                 few hours during the week.
               </p>
-              <div className="landing-cta-actions" style={{ justifyContent: "flex-start" }}>
+              <div className="landing-cta-actions" style={{ justifyContent: "flex-start", marginTop: 0 }}>
                 <a
                   href={socials.telegram}
                   target="_blank"
                   rel="noreferrer"
                   className="btn btn-primary"
                 >
-                  <Icon name="telegram" size={15} /> Telegram
+                  <Icon name="telegram" size={14} /> Telegram
                 </a>
                 <a href={`mailto:${profile.email}`} className="btn btn-ghost">
-                  <Icon name="mail" size={15} /> Email
+                  <Icon name="mail" size={14} /> Email
                 </a>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ── CTA ────────────────────────────────────── */}
+        {/* ── Closing CTA ────────────────────────────── */}
         <section id="contact" className="landing-cta">
-          <div>
-            <span className="kicker" style={{ justifyContent: "center", display: "flex" }}>
-              <i>Let's work together</i>
-            </span>
-            <h2>
-              Have a project in mind? <em>Let's talk.</em>
-            </h2>
-            <p>{profile.availability.toLowerCase()}.</p>
-            <div className="landing-cta-actions">
-              <a
-                href={socials.telegram}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-primary btn-lg"
-              >
-                <Icon name="telegram" size={16} /> Message on Telegram
-              </a>
-              <a
-                href={`mailto:${profile.email}`}
-                className="btn btn-ghost btn-lg"
-              >
-                <Icon name="mail" size={16} /> Email Me
-              </a>
-            </div>
+          <span className="kicker">
+            <i>Let&apos;s work together</i>
+          </span>
+          <h2>
+            Have a project in mind? <em>Let&apos;s talk.</em>
+          </h2>
+          <p>{profile.availability.toLowerCase()}.</p>
+          <div className="landing-cta-actions">
+            <a
+              href={socials.telegram}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-primary btn-lg"
+            >
+              <Icon name="telegram" size={15} /> Message on Telegram
+            </a>
+            <a
+              href={`mailto:${profile.email}`}
+              className="btn btn-ghost btn-lg"
+            >
+              <Icon name="mail" size={15} /> Email me
+            </a>
           </div>
         </section>
 

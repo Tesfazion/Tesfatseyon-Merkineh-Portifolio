@@ -1,0 +1,434 @@
+/* ============================================================
+   CHROME — navigation, brand, footer, floating controls
+   ============================================================ */
+
+/* -- Brand -------------------------------------------------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-xs);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.brand-name em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+a.brand:hover .brand-mark {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* -- Navbar ------------------------------------------------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: var(--nav-h);
+  border-bottom: 1px solid transparent;
+  background: rgba(243, 240, 231, 0);
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    backdrop-filter var(--dur) var(--ease);
+}
+
+.nav-scrolled {
+  background: rgba(243, 240, 231, 0.88);
+  border-bottom-color: var(--rule);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  backdrop-filter: saturate(140%) blur(14px);
+}
+
+/* Read-progress rule sitting on the header's bottom edge. Its scale is set
+   inline by Navbar from the shared scroll store. */
+.nav-progress {
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.nav-links > button,
+.nav-links > a:not(.btn) {
+  position: relative;
+  padding: 6px 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color var(--dur) var(--ease);
+}
+
+.nav-links > button::after,
+.nav-links > a:not(.btn)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--dur) var(--ease);
+}
+
+.nav-links > button:hover,
+.nav-links > a:not(.btn):hover,
+.nav-links > .active {
+  color: var(--ink);
+}
+
+.nav-links > button:hover::after,
+.nav-links > a:not(.btn):hover::after,
+.nav-links > .active::after {
+  transform: scaleX(1);
+}
+
+.nav-cta {
+  margin-left: 6px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-toggle {
+  display: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-xs);
+  color: var(--ink);
+}
+
+.nav-toggle:hover {
+  border-color: var(--ink);
+}
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 98;
+  background: rgba(25, 23, 18, 0.32);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* -- Palette trigger ---------------------------------------- */
+.palette-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-xs);
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.08em;
+  transition:
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.palette-trigger:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+  background: var(--card);
+}
+
+.palette-trigger kbd {
+  padding: 1px 5px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-xs);
+  background: var(--paper-deep);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--ink-2);
+}
+
+/* -- Footer -------------------------------------------------
+   Inverted: the page closes like the back cover of a book. */
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footer-inner {
+  padding-block: clamp(46px, 6vw, 78px) clamp(32px, 4vw, 52px);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.5fr) minmax(0, 0.65fr) minmax(0, 0.65fr)
+    minmax(0, 0.95fr) minmax(0, 0.6fr);
+  gap: clamp(22px, 3vw, 44px);
+}
+
+.footer-brand .brand {
+  color: var(--paper);
+}
+
+.footer-brand .brand-mark {
+  border-color: var(--rule-ink);
+  color: var(--paper);
+}
+
+.footer-brand p {
+  max-width: 34ch;
+  margin-top: 16px;
+  color: rgba(243, 240, 231, 0.62);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.footer h4 {
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(243, 240, 231, 0.45);
+}
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.footer-nav a,
+.footer-nav button {
+  padding: 0;
+  color: rgba(243, 240, 231, 0.74);
+  font-size: 0.9rem;
+  text-align: left;
+  transition: color var(--dur) var(--ease);
+}
+
+.footer-nav a:hover,
+.footer-nav button:hover {
+  color: var(--paper);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Not a link — deliberately, so it reads as an address, not a destination. */
+.footer-location {
+  font-size: 0.86rem;
+  color: rgba(243, 240, 231, 0.5);
+}
+
+.footer-links a {
+  color: rgba(243, 240, 231, 0.58);
+  transition: color var(--dur) var(--ease);
+}
+
+.footer-links a:hover {
+  color: var(--paper);
+}
+
+.footer .hero-socials a {
+  border-color: var(--rule-ink);
+  color: rgba(243, 240, 231, 0.7);
+}
+
+.footer .hero-socials a:hover {
+  color: var(--paper);
+  border-color: var(--paper);
+  background: rgba(243, 240, 231, 0.08);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--rule-ink);
+}
+
+.footer-bottom .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 18px;
+}
+
+.footer-bottom p {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: rgba(243, 240, 231, 0.48);
+}
+
+.footer .text-link {
+  border-bottom-color: var(--rule-ink);
+  color: var(--paper);
+}
+
+.footer .text-link:hover {
+  color: var(--paper);
+  border-bottom-color: var(--paper);
+}
+
+/* -- Responsive --------------------------------------------- */
+@media (max-width: 1080px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    border-bottom-color: var(--rule);
+    background: rgba(243, 240, 231, 0.94);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    backdrop-filter: saturate(140%) blur(14px);
+  }
+
+  .nav-toggle {
+    display: grid;
+  }
+
+  .nav-desktop-only {
+    display: none;
+  }
+
+  /* The drawer: fixed under the header, full width, opaque. It is
+     visibility-hidden when closed so it cannot be tabbed into. */
+  .nav-links {
+    position: fixed;
+    inset: var(--nav-h) 0 auto 0;
+    z-index: 99;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px var(--gut) 22px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility var(--dur);
+  }
+
+  .nav-links.open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-links > button,
+  .nav-links > a:not(.btn) {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  .nav-links > button::after,
+  .nav-links > a:not(.btn)::after {
+    display: none;
+  }
+
+  .nav-links > .active {
+    color: var(--accent);
+  }
+
+  .nav-cta {
+    margin: 18px 0 0;
+    align-self: flex-start;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand-name {
+    font-size: 1.18rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
