@@ -54,6 +54,8 @@ portfolio/
 ├── package.json
 ├── vite.config.js
 ├── vercel.json
+├── build/
+│   └── seo-feed.js
 ├── public/
 │   ├── CV-Tesfatseyon-Web-Developer.pdf
 │   ├── CV_Tesfatseyon_VideoEditor.pdf

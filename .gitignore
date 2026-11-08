@@ -16,7 +16,8 @@ dist-ssr
 !.env.example
 
 # Build artifacts
-build/
+build/*
+!build/seo-feed.js
 
 # Python bytecode from tools/
 __pycache__/
