@@ -19,11 +19,15 @@ import ProjectModal from "./ProjectModal";
 
 export default function Projects() {
   const mode = usePortfolio();
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState(
+    mode.projectCategories.includes("Featured") ? "Featured" : "All"
+  );
   const [open, setOpen] = useState(null);
 
   const shown = mode.projects.filter(
-    (p) => filter === "All" || p.category === filter
+    (p) => filter === "Featured"
+      ? p.featured
+      : filter === "All" || p.category === filter
   );
 
   return (

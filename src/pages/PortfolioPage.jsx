@@ -45,7 +45,7 @@ export default function PortfolioPage({ modeKey }) {
 
       <main>
         <Hero />
-        <Projects />
+        <Projects key={modeKey} />
         <About />
         <Services />
         <TechStack />

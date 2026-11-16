@@ -77,16 +77,13 @@ const LANDING_STATS = [
   { value: 7,  suffix: "",  label: "Core technologies"},
 ];
 
-/* One sample from each discipline, interleaved — the point of this list is
-   that the same person made all six. Looked up by `study` id rather than by
-   array position, so reordering a mode's projects cannot silently swap one
-   of these for something unrelated. */
+/* A few samples from each discipline, interleaved and looked up by `study`
+   id so reordering a mode's projects cannot silently swap one out. */
 const SELECTED_STUDIES = [
   ["ethio-sunshine-tech-solution", modes.web],
   ["shorts-batch-hooks-captions-b-roll", modes.video],
   ["leadforge-ai", modes.web],
   ["cinematic-travel-cut-graded-for-reels", modes.video],
-  ["wolaita-sodo-water-monitor", modes.web],
   ["launch-promo-45s", modes.video],
 ];
 

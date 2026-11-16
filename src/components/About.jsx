@@ -2,7 +2,6 @@
  * About — editorial split: identity + key facts on the left, bio and a
  * numbered highlight rail on the right.
  */
-import { useState } from "react";
 import { profile, company } from "../config";
 import { scrollToId } from "../hooks";
 import { usePortfolio } from "../PortfolioContext.js";
@@ -11,7 +10,6 @@ import Icon from "./Icon";
 
 export default function About() {
   const mode = usePortfolio();
-  const [imgOk, setImgOk] = useState(true);
 
   const meta = [
     { dt: "Focus",  dd: mode.chips.join(" · ") },
@@ -46,28 +44,6 @@ export default function About() {
           {/* ── Identity ── */}
           <Reveal>
             <div className="about-intro">
-              <span className="about-avatar" aria-hidden="true">
-                {imgOk ? (
-                  <picture>
-                    {/* Two tiers is the whole story: WebP is 15 kB where
-                        it is supported, and every browser that lacks
-                        WebP supports JPEG, so a third PNG tier would add
-                        209 kB to the repo to serve nobody. */}
-                    <source srcSet="/me.webp" type="image/webp" />
-                    <img
-                      src={profile.photo}
-                      alt=""
-                      width="600"
-                      height="600"
-                      loading="lazy"
-                      decoding="async"
-                      onError={() => setImgOk(false)}
-                    />
-                  </picture>
-                ) : (
-                  profile.initials
-                )}
-              </span>
               <h3>{profile.name}</h3>
               <p><strong>{mode.label}</strong></p>
               <span className="about-status">

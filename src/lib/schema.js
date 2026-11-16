@@ -36,14 +36,9 @@ export function personSchema(profile, socials) {
         addressCountry: "ET",
       },
     },
-    alumniOf: {
-      "@type": "CollegeOrUniversity",
-      name: profile.education,
-    },
     knowsAbout: [
-      "React", "Next.js", "TypeScript", "Python", "Tailwind CSS",
-      "Node.js", "UI/UX Design", "SEO", "CapCut", "DaVinci Resolve",
-      "Color Grading",
+      "React", "Next.js", "TypeScript", "Node.js", "PostgreSQL",
+      "Full-stack web development", "Product engineering", "Testing",
     ],
     sameAs: Object.values(socials),
   };

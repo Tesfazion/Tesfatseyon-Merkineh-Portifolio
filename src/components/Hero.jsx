@@ -1,9 +1,9 @@
 /**
  * Hero — the opening spread of a discipline page.
  *
- * Left: the claim (display serif) and the two things a visitor can do.
- * Right: the Web / Video index, so switching discipline never means a
- * trip back to the landing page. Below: the numbers, in a ruled strip.
+ * Left: the role claim and primary actions. Right: a portrait-led engineering
+ * card on the web page, with related creative work kept secondary. Below:
+ * technical focus in a compact strip.
  *
  * The typed role line and the count-up stats are gone on purpose: motion
  * for its own sake competes with the work, and a static number is not
@@ -17,6 +17,8 @@ import Icon from "./Icon";
 
 export default function Hero() {
   const mode = usePortfolio();
+  const otherMode = modesList.find((m) => m.key !== mode.key);
+  const isWeb = mode.key === "web";
 
   return (
     <section id="home" className="hero" aria-label="Introduction">
@@ -24,7 +26,7 @@ export default function Hero() {
       <div className="hero-copy">
         <div className="hero-badge">
           <span className="hero-badge-dot" aria-hidden="true" />
-          {profile.role}
+          {isWeb ? profile.role : mode.label}
         </div>
 
         <h1 className="hero-title">
@@ -68,30 +70,56 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── Discipline index ── */}
-      <aside className="hero-types" aria-label="The two disciplines">
-        <span className="hero-types-kicker">Two disciplines</span>
-        {modesList.map((m) => (
+      {/* ── Engineering focus / related work ── */}
+      <aside className={`hero-types${isWeb ? " hero-types--web" : ""}`} aria-label={isWeb ? "Engineering focus" : "Related work"}>
+        {isWeb ? (
+          <>
+            <div className="hero-profile-card">
+              <picture className="hero-profile-photo">
+                <source srcSet="/me.webp" type="image/webp" />
+                <img
+                  src={profile.photo}
+                  alt={`${profile.name}, software engineer`}
+                  width="600"
+                  height="600"
+                  fetchPriority="high"
+                />
+              </picture>
+              <div className="hero-profile-copy">
+                <span className="hero-types-kicker">Full-stack engineering</span>
+                <strong>From interface to API.</strong>
+                <ul className="hero-profile-skills">
+                  <li>React · Next.js</li>
+                  <li>TypeScript · Node.js</li>
+                </ul>
+              </div>
+            </div>
+          </>
+        ) : (
           <Link
-            key={m.key}
-            to={m.route}
+            to={otherMode.route}
             className="hero-type"
-            style={{ "--type-accent": `rgb(${m.accent})` }}
-            aria-current={m.key === mode.key ? "page" : undefined}
+            style={{ "--type-accent": `rgb(${otherMode.accent})` }}
           >
             <span className="hero-type-icon" aria-hidden="true">
-              <Icon name={m.icon} size={17} />
+              <Icon name={otherMode.icon} size={17} />
             </span>
             <span className="hero-type-body">
-              <strong>{m.label}</strong>
-              <span>{m.chips.slice(0, 2).join(" · ")}</span>
+              <strong>Also in my portfolio</strong>
+              <span>{otherMode.chips.slice(0, 2).join(" · ")}</span>
             </span>
             <Icon name="arrowRight" size={15} className="hero-type-arrow" />
           </Link>
-        ))}
+        )}
+        {isWeb && (
+          <Link to={otherMode.route} className="text-link hero-other-work">
+            Other creative work: video editing
+            <Icon name="arrowRight" size={14} />
+          </Link>
+        )}
       </aside>
 
-      {/* ── Numbers ── */}
+      {/* ── At a glance ── */}
       <div className="hero-stats-bar">
         {mode.stats.map((s) => (
           <div className="stat" key={s.label}>

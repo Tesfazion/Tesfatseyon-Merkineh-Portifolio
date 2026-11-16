@@ -1,9 +1,8 @@
-"""Dump the text of a PDF next to its .docx source so the two can be diffed.
+"""Dump text from a served PDF and its archived .docx source for review.
 
-The video CV is served to visitors as a PDF exported by hand, while the
-authoritative copy lives in src/assets as a .docx. Nothing enforced that
-those two agree, so they drifted. This prints both, normalised, so the
-difference is obvious.
+Public resume PDFs are generated from tools/build_resumes.py. The .docx
+files are retained as historical source documents; this utility prints both
+versions so their contents can be inspected side by side.
 
 Usage:  python tools/dump_pdf.py public/CV_Tesfatseyon_VideoEditor.pdf
 """

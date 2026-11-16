@@ -17,8 +17,7 @@ import { parseFrontmatter } from "../src/lib/frontmatter.js";
    gets edited as prose; "weekly" for the blog index, which changes
    whenever a post is published. */
 const STATIC_ROUTES = [
-  { path: "/",        priority: "1.0", changefreq: "monthly" },
-  { path: "/web",     priority: "0.9", changefreq: "monthly" },
+  { path: "/web",     priority: "1.0", changefreq: "monthly" },
   { path: "/video",   priority: "0.9", changefreq: "monthly" },
   { path: "/blog",    priority: "0.8", changefreq: "weekly"  },
 ];

@@ -1,15 +1,8 @@
-"""Build the public resume PDFs from the source CV content.
+"""Build the public resume PDFs from the content below.
 
-Both CVs are the same document in two places: the authoritative copy in
-src/assets/*.docx and the constants below. run tools/read_cv.py to dump a
-.docx, or tools/dump_pdf.py to diff a served PDF against its source, if the
-content drifts. This produces real vector PDFs with selectable, searchable
-text rather than rasterised images.
-
-Keeping the two CVs in one script is deliberate. They were previously out of
-sync: the video CV was a hand-exported PDF that nobody regenerated, so it kept
-serving a dead email address and a mismatched LinkedIn slug long after the web
-CV had been corrected. One script, one CONTACT block, two builds.
+This produces vector PDFs with selectable, searchable text rather than
+rasterised images. Both CVs use one CONTACT block so their public details
+stay in sync.
 
 Usage:  python tools/build_resumes.py
 """
@@ -60,68 +53,50 @@ CONTACT = [
 
 WEB_EXPERIENCE = [
     (
-        "Hotel Design Website",
-        "Frontend Developer",
-        "May 2023 - Aug 2023",
-        "Built and deployed a responsive hotel design site with modern UI layouts and a "
-        "compact folder structure. Improved responsiveness and cross-device "
-        "compatibility.",
+        "Sunshine Tech Solution",
+        "Founder & software engineer",
+        "Live site",
+        "Built and deployed a React, TypeScript, Vite, and Tailwind company site with "
+        "six locales, including an Arabic right-to-left layout.",
     ),
     (
-        "Fellowship Website",
-        "Frontend Developer",
-        "Sep 2023 - Dec 2023",
-        "Developed a responsive fellowship website for Dilla University EvaSUE, "
-        "integrating worship schedules, ministry programs, and image galleries.",
+        "VisionSpeak AI",
+        "Full-stack product engineer",
+        "Public demo",
+        "Built a Next.js and TypeScript speaking-practice app with browser-side "
+        "MediaPipe analysis and PostgreSQL-backed reports. Scores are documented as "
+        "coaching heuristics, not validated assessments.",
     ),
     (
-        "AI for FOREX Analayzing",
-        "AI/ML Developer - Independent Project",
-        "Jan 2024 - Apr 2024",
-        "Created an AI-powered system for analysing and predicting FOREX market trends "
-        "using Python, scikit-learn, pandas, and matplotlib.",
+        "NetVisor Suite",
+        "Full-stack developer",
+        "Public source",
+        "Implemented network inventory and operations workflows with Node.js, Express, "
+        "PostgreSQL, and WebSockets. The repository includes API and security tests; "
+        "the app is self-hosted.",
     ),
     (
-        "Amharic Offline-Chat AI",
-        "Developer - Independent Project",
-        "May 2024 - Present",
-        "Designed and implemented an offline Amharic language assistant using Python and "
-        "JavaScript, expanding accessibility for local users.",
+        "LeadForge AI",
+        "Product developer",
+        "In development",
+        "Built a lead-management and website-delivery workspace with Next.js, Node.js, "
+        "and Supabase. Provider-dependent inbox sync, team access, and billing are not "
+        "active.",
     ),
 ]
 
 WEB_SKILLS = [
-    "Software and web development (React, Next.js, Python)",
-    "Version control and deployment (Git workflows)",
-    "Programming (Python, JavaScript, TypeScript basics)",
-    "Project organisation and clean, modular code",
-    "Design and branding (responsive UI/UX, modern layouts)",
-    "Problem solving and troubleshooting",
-]
-
-WEB_EDUCATION = (
-    "BSc Computer Science - Dilla University, Ethiopia",
-    "Final-year student, graduating 2027. Focus on software and full-stack web "
-    "development and responsive UI/UX design. Coursework: Data Structures & "
-    "Algorithms, Web Development, Database Systems, Software Engineering.",
-)
-
-WEB_HOBBIES = [
-    "Socialising with friends",
-    "Travelling",
-    "Reading",
-    "Classic films",
-    "Learning new languages",
+    "Frontend: React, Next.js, TypeScript, responsive UI",
+    "Backend: Node.js, Express, API and server workflows",
+    "Data: PostgreSQL, Prisma, Supabase",
+    "Quality: automated tests, GitHub Actions, CI, technical documentation",
 ]
 
 WEB_PROFILE = (
-    "Freelance software and full-stack web developer, and a final-year Computer "
-    "Science student (graduating 2027), with hands-on experience building "
-    "responsive websites and scalable project structures. Skilled in Git workflows, "
-    "React, Python, and modern UI/UX design, with a focus on clean, modular code and "
-    "professional branding. Detail-oriented and persistent in troubleshooting, "
-    "adaptable to new technologies, and passionate about creating youth-friendly, "
-    "modern digital experiences."
+    "Software engineer and founder focused on full-stack product delivery. Hands-on "
+    "work spans product interfaces, API and data workflows, testing, and deployment. "
+    "Selected work includes a multilingual live site, a browser-based speaking coach, "
+    "and network operations software, with project status and limitations documented."
 )
 
 VIDEO_ROLE = "Video Editor | Short-Form & High-Retention Content"
@@ -181,23 +156,17 @@ VIDEO_EXPERIENCE = [
     ),
     (
         "Frontend & Web Developer",
-        "Freelance / Academic Projects \u2014 Dilla University, Ethiopia",
+        "Freelance / Independent Projects",
         "2023 \u2013 2024",
         [
-            "Built and deployed responsive websites, including a hotel design site and "
-            "a university fellowship website, with a focus on clean UI and cross-device "
-            "usability.",
+            "Built and deployed a responsive hotel design site with a focus on clean UI "
+            "and cross-device usability.",
             "Background in structured, detail-oriented technical work \u2014 a skillset "
             "that carries directly into organized editing workflows and fast adoption "
             "of new creative tools.",
         ],
     ),
 ]
-
-VIDEO_EDUCATION = (
-    "B.Sc. Computer Science",
-    "Dilla University, Ethiopia. Expected 2027.",
-)
 
 VIDEO_HOBBIES = [
     "Short-form video trends",
@@ -273,11 +242,10 @@ def section(title):
 
 def entry(title, role, dates, body):
     """One experience entry. `body` is a paragraph, or a list of bullets."""
-    meta = f"{role} &nbsp;&bull;&nbsp; {dates}" if role else dates
-    parts = [
-        Paragraph(escape(title), S["job"]),
-        Paragraph(meta, S["meta"]),
-    ]
+    meta = " &nbsp;&bull;&nbsp; ".join(value for value in (role, dates) if value)
+    parts = [Paragraph(escape(title), S["job"])]
+    if meta:
+        parts.append(Paragraph(meta, S["meta"]))
     if isinstance(body, str):
         parts.append(Paragraph(escape(body), S["body"]))
     else:
@@ -294,8 +262,7 @@ def escape(t):
     return (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def build(path, role, profile, skills, education, experience, hobbies=None,
-          accent=WEB_ACCENT):
+def build(path, role, profile, skills, experience, hobbies=None, accent=WEB_ACCENT):
     global S
     S = styles(accent)
     doc = BaseDocTemplate(
@@ -315,15 +282,10 @@ def build(path, role, profile, skills, education, experience, hobbies=None,
     story = [header(role, accent), Spacer(1, 2)]
 
     story += [section("Profile"), Paragraph(escape(profile), S["body"]), Spacer(1, 2)]
-    story += [section("Experience")]
+    story += [section("Selected Work")]
     for e in experience:
         story.append(entry(*e))
     story += [section("Key Skills")] + bullets(skills) + [Spacer(1, 2)]
-    story += [
-        section("Education"),
-        Paragraph(escape(education[0]), S["job"]),
-        Paragraph(escape(education[1]), S["body"]),
-    ]
     if hobbies:
         story += [section("Hobbies & Interests")] + bullets(hobbies)
 
@@ -334,8 +296,8 @@ def build(path, role, profile, skills, education, experience, hobbies=None,
 if __name__ == "__main__":
     a = build(
         os.path.join(OUT, "CV-Tesfatseyon-Web-Developer.pdf"),
-        "Full-Stack Web Developer",
-        WEB_PROFILE, WEB_SKILLS, WEB_EDUCATION, WEB_EXPERIENCE, WEB_HOBBIES,
+        "Software Engineer | Full-Stack Web",
+        WEB_PROFILE, WEB_SKILLS, WEB_EXPERIENCE,
         accent=WEB_ACCENT,
     )
     print(f"wrote {os.path.relpath(a, ROOT)}  {os.path.getsize(a)} bytes")
@@ -343,7 +305,7 @@ if __name__ == "__main__":
     b = build(
         os.path.join(OUT, "CV_Tesfatseyon_VideoEditor.pdf"),
         VIDEO_ROLE,
-        VIDEO_PROFILE, VIDEO_SKILLS, VIDEO_EDUCATION, VIDEO_EXPERIENCE,
-        VIDEO_HOBBIES, accent=VIDEO_ACCENT,
+        VIDEO_PROFILE, VIDEO_SKILLS, VIDEO_EXPERIENCE, VIDEO_HOBBIES,
+        accent=VIDEO_ACCENT,
     )
     print(f"wrote {os.path.relpath(b, ROOT)}  {os.path.getsize(b)} bytes")

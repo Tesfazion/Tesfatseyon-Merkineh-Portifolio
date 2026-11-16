@@ -9,6 +9,7 @@
     "check:tokens": "node tools/check_tokens.mjs",
     "check:content": "node tools/check_studies.mjs && node tools/check_posts.mjs",
     "check": "npm run check:tokens && npm run check:content",
+    "test": "node --test tools/case-studies.test.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

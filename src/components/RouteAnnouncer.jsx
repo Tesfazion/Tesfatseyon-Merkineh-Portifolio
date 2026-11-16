@@ -37,7 +37,7 @@ export default function RouteAnnouncer() {
 function labelFor(pathname) {
   if (pathname.startsWith("/blog/")) return "Article opened";
   if (pathname === "/blog") return "Blog index";
-  if (pathname === "/web") return "Web developer portfolio";
+  if (pathname === "/web") return "Software engineering portfolio";
   if (pathname === "/video") return "Video editor portfolio";
   if (pathname === "/") return "Home";
   return "Page not found";

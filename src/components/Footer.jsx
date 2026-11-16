@@ -1,13 +1,15 @@
 /**
- * Footer — editorial grid: brand + blurb, page nav, service modes,
+ * Footer — editorial grid: brand + blurb, page nav, related work,
  * socials — then a bottom rule with copyright and back-to-top.
  */
 import { Link } from "react-router-dom";
-import { navLinks, modesList, profile, socials, SOCIAL_KEYS, site, company } from "../config";
+import { navLinks, profile, socials, SOCIAL_KEYS, site, company } from "../config";
 import { usePrefersReducedMotion, useSectionNav } from "../hooks";
+import { usePortfolio } from "../PortfolioContext.js";
 import Icon from "./Icon";
 
 export default function Footer() {
+  const mode = usePortfolio();
   const year = new Date().getFullYear();
   const reduced = usePrefersReducedMotion();
   /* Footer section links are reachable from /blog, where the sections do not
@@ -27,12 +29,16 @@ export default function Footer() {
               </span>
             </Link>
             <p>
-              Full-stack developer &amp; short-form video editor.
-              Websites that convert, videos that retain.
+              {mode.key === "web"
+                ? "Software engineer and founder focused on maintainable, full-stack web products."
+                : "Short-form video editor focused on clear stories, considered pacing, and polished delivery."}
             </p>
             <div className="footer-links">
               <Link to="/">Home</Link>
               <Link to="/blog">Blog</Link>
+              <Link to={mode.key === "web" ? "/video" : "/web"}>
+                {mode.key === "web" ? "Other creative work" : "Software engineering"}
+              </Link>
               <a href={company.url} target="_blank" rel="noopener noreferrer">
                 {company.name}
               </a>
@@ -59,11 +65,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4>Services</h4>
-            <nav className="footer-nav" aria-label="Service modes">
-              {modesList.map((m) => (
-                <Link key={m.key} to={m.route}>{m.label}</Link>
-              ))}
+            <h4>{mode.key === "web" ? "Other creative work" : "Software engineering"}</h4>
+            <nav className="footer-nav" aria-label="Related work">
+              <Link to={mode.key === "web" ? "/video" : "/web"}>
+                {mode.key === "web" ? "Video editing" : "Full-stack web development"}
+              </Link>
               <a href={`mailto:${profile.email}`}>Contact</a>
             </nav>
           </div>

@@ -42,7 +42,7 @@ export default function Resume() {
             ))}
             <div className="resume-row">
               <span className="resume-row-label">Full version</span>
-              <span className="resume-row-value">PDF · current · ready to send</span>
+              <span className="resume-row-value">PDF · selected engineering work</span>
               <button
                 type="button"
                 className="btn btn-sm"

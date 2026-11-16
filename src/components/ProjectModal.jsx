@@ -27,6 +27,7 @@ const facts = (p) => {
   const s = caseStudies[p.study] || {};
   const rows = [];
   if (s.role) rows.push({ label: "My role", value: s.role });
+  if (s.status) rows.push({ label: "Status", value: s.status });
   if (s.problem) rows.push({ label: "The problem", value: s.problem });
   if (s.approach) rows.push({ label: "Approach", value: s.approach });
   if (s.outcome) rows.push({ label: "Outcome", value: s.outcome });
@@ -103,6 +104,32 @@ export default function ProjectModal({ project, onClose }) {
                 </div>
               ))}
             </dl>
+          )}
+
+          {study?.scenario && (
+            <div className="pm-section pm-scenario">
+              <h3>Illustrative scenario</h3>
+              <p>{study.scenario.text}</p>
+              <p className="pm-scenario-disclaimer">
+                {study.scenario.disclosure}
+              </p>
+            </div>
+          )}
+
+          {study?.evidence?.length > 0 && (
+            <div className="pm-section">
+              <h3>Evidence you can inspect</h3>
+              <ul className="pm-evidence">
+                {study.evidence.map((item) => (
+                  <li key={item.href}>
+                    <a href={item.href} target="_blank" rel="noopener noreferrer">
+                      <span>{item.label}</span>
+                      <Icon name="external" size={13} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {study?.highlights?.length > 0 && (

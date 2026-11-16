@@ -8,7 +8,7 @@
  * SPA rewrites for direct hits are handled by vercel.json.
  */
 import { Suspense, lazy, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import CommandPalette from "./components/CommandPalette";
 import RouteAnnouncer from "./components/RouteAnnouncer";
@@ -16,7 +16,6 @@ import ErrorPage from "./components/ErrorPage";
 import { useMode } from "./hooks";
 
 /* Page chunks */
-const Landing       = lazy(() => import("./pages/Landing"));
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 const BlogIndex     = lazy(() => import("./pages/BlogIndex"));
 const BlogPost      = lazy(() => import("./pages/BlogPost"));
@@ -118,7 +117,7 @@ function Shell() {
         <Suspense fallback={<PageSkeleton />}>
           <div id="main" tabIndex={-1}>
             <Routes>
-              <Route path="/"       element={<Landing />} />
+              <Route path="/"       element={<Navigate to="/web" replace />} />
               <Route path="/web"    element={<PortfolioPage modeKey="web" />} />
               <Route path="/video"  element={<PortfolioPage modeKey="video" />} />
               <Route path="/blog"   element={<BlogIndex />} />
